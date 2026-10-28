@@ -20,6 +20,8 @@ import { AuthModule } from './auth/auth.module.js';
   providers: [AppService],
 })
 export class AppModule {
+
+  //TODO mover a un propio service
   constructor(config: ConfigService) {
     // Formato: cloudinary://<api_key>:<api_secret>@<cloud_name>
     const cloudinaryUrl = new URL(config.getOrThrow<string>('CLOUDINARY_URL'));
