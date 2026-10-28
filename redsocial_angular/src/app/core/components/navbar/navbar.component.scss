@@ -1,0 +1,129 @@
+.navbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 28px;
+  padding: 16px 48px;
+  color: var(--color-text);
+  border-bottom: 2px solid var(--color-border);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--color-text);
+}
+
+.brand-name {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -1.04px;
+}
+
+.links {
+  display: flex;
+  gap: 4px;
+
+  a {
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    border-radius: 999px;
+    color: var(--color-text);
+  }
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1 1 240px;
+  max-width: 420px;
+  height: 48px;
+  padding: 0 18px;
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  border-radius: 999px;
+  color: var(--color-text-muted);
+}
+
+.search-text {
+  flex: 1;
+  overflow: hidden;
+  color: var(--color-text-muted);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-left: auto;
+}
+
+.icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  color: var(--color-text);
+  background: none;
+  border: 2px solid var(--color-border);
+  border-radius: 50%;
+}
+
+.settings {
+  position: relative;
+}
+
+.menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  min-width: 180px;
+  padding: 6px;
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  border-radius: 16px;
+
+  button {
+    height: auto;
+    padding: 10px 14px;
+    text-align: left;
+    color: var(--color-text);
+    background: none;
+    border-radius: 10px;
+
+    &:hover {
+      background: var(--color-border);
+    }
+  }
+}
+
+.new-frame {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 48px;
+  padding: 0 20px;
+  font-weight: 800;
+  color: var(--color-bg);
+  background: var(--color-text);
+  border-radius: 999px;
+}
+
+.avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  color: var(--color-text);
+  border: 3px solid var(--color-primary);
+  border-radius: 50%;
+}

@@ -1,0 +1,20 @@
+<app-auth-layout>
+  <h1>Crear cuenta</h1>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <input type="text" placeholder="Nombre" formControlName="firstName">
+    <input type="text" placeholder="Apellido" formControlName="lastName">
+    <input type="email" placeholder="Email" formControlName="email">
+    <input type="text" placeholder="Nombre de usuario" formControlName="username">
+    <input type="date" placeholder="Fecha de nacimiento" formControlName="birthDate">
+    <div class="password">
+      <input [type]="showPassword() ? 'text' : 'password'" placeholder="Contraseña" formControlName="password">
+      <button type="button" class="eye" (click)="showPassword.set(!showPassword())"><mat-icon>{{ showPassword() ? 'visibility' : 'visibility_off' }}</mat-icon></button>
+    </div>
+    <div class="password">
+      <input [type]="showRepeatPassword() ? 'text' : 'password'" placeholder="Repetir contraseña" formControlName="repeatPassword">
+      <button type="button" class="eye" (click)="showRepeatPassword.set(!showRepeatPassword())"><mat-icon>{{ showRepeatPassword() ? 'visibility' : 'visibility_off' }}</mat-icon></button>
+    </div>
+    <button type="submit" [disabled]="form.invalid">Registrarme</button>
+  </form>
+  <p>¿Ya tenés cuenta? <a routerLink="/login">Iniciá sesión</a></p>
+</app-auth-layout>

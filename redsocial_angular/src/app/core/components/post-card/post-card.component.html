@@ -1,0 +1,29 @@
+<article class="card">
+  <header class="header">
+    <div>
+      <h3 class="title">{{ post.title }}</h3>
+      <span class="date">{{ post.createdAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+    </div>
+    @if (post.author; as author) {
+      <div class="author">
+        <span>{{ author.username }}</span>
+        <div class="avatar">
+          @if (author.profilePictureUrl) {
+            <img [src]="author.profilePictureUrl">
+          } @else {
+            <mat-icon>person</mat-icon>
+          }
+        </div>
+      </div>
+    }
+  </header>
+  <img class="photo" [src]="post.imageUrl" [alt]="post.title">
+  <p #description class="description" [class.clamped]="!expanded()">{{ post.description }}</p>
+  @if (isLong() && !expanded()) {
+    <button type="button" class="more" (click)="expanded.set(true)">ver más...</button>
+  }
+  <div class="stats">
+    <span><mat-icon>favorite_border</mat-icon> {{ post.likesCount }}</span>
+    <span><mat-icon>chat_bubble_outline</mat-icon> {{ post.commentsCount }}</span>
+  </div>
+</article>

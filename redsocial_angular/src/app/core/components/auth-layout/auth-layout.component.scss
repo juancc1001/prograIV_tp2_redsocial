@@ -1,0 +1,80 @@
+.auth {
+  display: flex;
+  height: 100vh;
+}
+
+.side {
+  flex: 0 0 70%;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 48px;
+  color: var(--color-bg);
+  background: var(--color-secondary);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo {
+  padding: 8px;
+  background: var(--color-bg);
+  border-radius: 50%;
+}
+
+.brand-name {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -1.04px;
+}
+
+.hero {
+  margin: auto 0;
+}
+
+.tagline {
+  max-width: 12ch;
+  font-size: 56px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.subtitle {
+  max-width: 40ch;
+  font-family: var(--font-family-secondary);
+  font-size: var(--font-size-base);
+}
+
+.polaroids {
+  display: flex;
+  gap: var(--space-4);
+}
+
+.polaroid {
+  padding: 8px 8px 4px;
+  background: var(--color-text);
+
+  img {
+    width: 140px;
+    height: 140px;
+    object-fit: cover;
+  }
+}
+
+.date {
+  display: block;
+  padding-top: 4px;
+  font-family: var(--font-family-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.form-panel {
+  flex: 0 0 30%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--space-5);
+  background: var(--color-bg);
+}

@@ -1,0 +1,12 @@
+<app-auth-layout>
+  <h1>Iniciar sesión</h1>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <input type="text" placeholder="Usuario o email" formControlName="usernameOrEmail">
+    <div class="password">
+      <input [type]="showPassword() ? 'text' : 'password'" placeholder="Contraseña" formControlName="password">
+      <button type="button" class="eye" (click)="showPassword.set(!showPassword())"><mat-icon>{{ showPassword() ? 'visibility' : 'visibility_off' }}</mat-icon></button>
+    </div>
+    <button type="submit" [disabled]="form.invalid">Entrar</button>
+  </form>
+  <p>¿No tenés cuenta? <a routerLink="/register">Registrate</a></p>
+</app-auth-layout>

@@ -1,0 +1,38 @@
+<main class="profile">
+  @if (profile(); as profile) {
+    <section class="banner">
+      <div class="picture">
+        @if (profile.profilePictureUrl) {
+          <img [src]="profile.profilePictureUrl">
+        } @else {
+          <mat-icon>person</mat-icon>
+        }
+      </div>
+      <div class="info">
+        <h1 class="name">{{ profile.firstName }} {{ profile.lastName }}</h1>
+        <p class="username">&#64;{{ profile.username }}</p>
+        @if (profile.bio) {
+          <p>{{ profile.bio }}</p>
+        }
+        <div class="stats">
+          <span><strong>{{ profile.postsCount }}</strong> posts</span>
+          <span><strong>{{ profile.followersCount }}</strong> seguidores</span>
+          <span><strong>{{ profile.followingCount }}</strong> siguiendo</span>
+        </div>
+      </div>
+    </section>
+
+    <nav class="tabs">
+      <button type="button" class="tab" [class.active]="activeTab() === 'rollo'" (click)="activeTab.set('rollo')">Rollo</button>
+      <button type="button" class="tab" [class.active]="activeTab() === 'muro'" (click)="activeTab.set('muro')">Muro</button>
+    </nav>
+
+    @if (activeTab() === 'rollo') {
+      <section class="posts">
+        @for (post of posts(); track post.id) {
+          <app-post-card [post]="post" />
+        }
+      </section>
+    }
+  }
+</main>

@@ -1,0 +1,28 @@
+.snackbar {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 280px;
+  max-width: 90vw;
+  padding: 14px 16px;
+  border-radius: 4px;
+  background: #d32f2f;
+  color: #fff;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+
+  span {
+    flex: 1;
+  }
+
+  button {
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: 16px;
+  }
+}

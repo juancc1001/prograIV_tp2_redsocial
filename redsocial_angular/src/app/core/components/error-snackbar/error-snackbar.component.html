@@ -1,0 +1,6 @@
+@if (errorService.message(); as message) {
+  <div class="snackbar">
+    <span>{{ message }}</span>
+    <button type="button" (click)="errorService.hide()">✕</button>
+  </div>
+}
