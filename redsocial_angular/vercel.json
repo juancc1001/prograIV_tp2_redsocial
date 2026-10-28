@@ -1,0 +1,4 @@
+{
+  "outputDirectory": "dist/redsocial_angular/browser",
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+}
