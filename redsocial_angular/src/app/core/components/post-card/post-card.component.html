@@ -17,13 +17,22 @@
       </div>
     }
   </header>
-  <img class="photo" [src]="post.imageUrl" [alt]="post.title">
+  <a [routerLink]="['/post', post.id]">
+    <img class="photo" [src]="post.imageUrl" [alt]="post.title">
+  </a>
   <p #description class="description" [class.clamped]="!expanded()">{{ post.description }}</p>
   @if (isLong() && !expanded()) {
     <button type="button" class="more" (click)="expanded.set(true)">ver más...</button>
   }
   <div class="stats">
-    <span><mat-icon>favorite_border</mat-icon> {{ post.likesCount }}</span>
+    <button type="button" class="like" (click)="toggleLike()">
+      <mat-icon>{{ liked() ? 'favorite' : 'favorite_border' }}</mat-icon> {{ likesCount() }}
+    </button>
     <span><mat-icon>chat_bubble_outline</mat-icon> {{ post.commentsCount }}</span>
+    @if (isOwner()) {
+      <button type="button" class="delete" (click)="deletePost()">
+        <mat-icon>delete</mat-icon>
+      </button>
+    }
   </div>
 </article>

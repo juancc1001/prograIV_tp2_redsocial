@@ -3,6 +3,8 @@ import { AuthService } from './auth.service.js';
 import { RegisterDto } from './dto/register.dto.js';
 import { LoginDto } from './dto/login.dto.js';
 import { AuthGuard } from './auth.guard.js';
+import type { JwtPayload } from './auth.guard.js';
+import { CurrentUser } from './current-user.decorator.js';
 
 @Controller('auth')
 export class AuthController {
@@ -17,6 +19,14 @@ export class AuthController {
   @HttpCode(200)
   login(@Body() dto: LoginDto) {
     return this.authService.login(dto);
+  }
+
+  @Post('refresh')
+  @HttpCode(200)
+  @UseGuards(AuthGuard)
+  refresh(@CurrentUser() user: JwtPayload, @Headers('authorization') authorization: string) {
+    const token = authorization.split(' ')[1];
+    return this.authService.refresh(user.sub, token);
   }
 
   @Post('logout')

@@ -10,7 +10,6 @@ import { LoginDto } from './dto/login.dto.js';
 @Injectable()
 export class AuthService {
   private readonly passwordHasher = new PasswordHasher();
-  // tokens invalidados por logout; se pierden al reiniciar el server
   private readonly revokedTokens = new Set<string>();
 
   constructor(
@@ -53,10 +52,21 @@ export class AuthService {
     return this.createToken(user);
   }
 
+  // entrega un token nuevo y revoca el anterior
+  async refresh(userId: string, oldToken: string) {
+    const user = await this.userModel.findById(userId);
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+    this.revokedTokens.add(oldToken);
+    return this.createToken(user);
+  }
+
   logout(token: string) {
     this.revokedTokens.add(token);
   }
 
+  //verifica que no se use un token de usuario que ya cerró sesion
   isRevoked(token: string) {
     return this.revokedTokens.has(token);
   }

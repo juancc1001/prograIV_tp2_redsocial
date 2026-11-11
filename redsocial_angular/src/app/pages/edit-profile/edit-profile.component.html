@@ -1,0 +1,40 @@
+<main class="edit-profile">
+  <p class="eyebrow">Mi perfil</p>
+  <h1 class="heading">Editá tu perfil.</h1>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="preview">
+      <div class="frame">
+        @if (previewUrl()) {
+          <img [src]="previewUrl()">
+        } @else {
+          <mat-icon class="placeholder">person</mat-icon>
+        }
+      </div>
+      <label class="change">
+        <mat-icon>refresh</mat-icon>
+        Cambiar foto
+        <input type="file" accept="image/*" (change)="onPictureChange($event)">
+      </label>
+    </div>
+
+    <div class="fields">
+      <label class="field">
+        <span class="label">Nombre</span>
+        <input type="text" formControlName="firstName">
+      </label>
+
+      <label class="field">
+        <span class="label">Apellido</span>
+        <input type="text" formControlName="lastName">
+      </label>
+
+      <label class="field description">
+        <span class="label">Descripción</span>
+        <textarea placeholder="Contá algo sobre vos." formControlName="bio"></textarea>
+      </label>
+
+      <button type="submit" class="submit" [disabled]="form.invalid">Guardar</button>
+    </div>
+  </form>
+</main>

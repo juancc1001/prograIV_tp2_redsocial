@@ -28,6 +28,20 @@
   }
 }
 
+.edit {
+  align-self: flex-start;
+  margin-left: auto;
+  padding: 0 var(--space-4);
+  font-weight: 800;
+  color: var(--color-text);
+  background: none;
+  border: 2px solid var(--color-border);
+
+  &:hover {
+    background: var(--color-border);
+  }
+}
+
 .name {
   color: var(--color-primary);
 }
@@ -71,4 +85,10 @@
   flex-direction: column;
   gap: var(--space-5);
   margin-top: var(--space-4);
+}
+
+.more {
+  align-self: center;
+  padding: 0 var(--space-5);
+  font-weight: 800;
 }

@@ -20,6 +20,9 @@
           <span><strong>{{ profile.followingCount }}</strong> siguiendo</span>
         </div>
       </div>
+      @if (profile.username === authService.username()) {
+        <button type="button" class="edit" routerLink="/edit-profile">Editar perfil</button>
+      }
     </section>
 
     <nav class="tabs">
@@ -30,7 +33,10 @@
     @if (activeTab() === 'rollo') {
       <section class="posts">
         @for (post of posts(); track post.id) {
-          <app-post-card [post]="post" />
+          <app-post-card [post]="post" (deleted)="removePost($event)" />
+        }
+        @if (hasMore()) {
+          <button type="button" class="more" (click)="loadPosts()">Cargar más</button>
         }
       </section>
     }

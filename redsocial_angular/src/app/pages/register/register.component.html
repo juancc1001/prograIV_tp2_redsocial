@@ -2,18 +2,47 @@
   <h1>Crear cuenta</h1>
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <input type="text" placeholder="Nombre" formControlName="firstName">
+    @if (hasError('firstName', 'required')) {
+      <p class="error">El nombre es obligatorio</p>
+    }
     <input type="text" placeholder="Apellido" formControlName="lastName">
+    @if (hasError('lastName', 'required')) {
+      <p class="error">El apellido es obligatorio</p>
+    }
     <input type="email" placeholder="Email" formControlName="email">
+    @if (hasError('email', 'required')) {
+      <p class="error">El email es obligatorio</p>
+    }
+    @if (hasError('email', 'email')) {
+      <p class="error">El email no es válido</p>
+    }
     <input type="text" placeholder="Nombre de usuario" formControlName="username">
+    @if (hasError('username', 'required')) {
+      <p class="error">El nombre de usuario es obligatorio</p>
+    }
     <input type="date" placeholder="Fecha de nacimiento" formControlName="birthDate">
+    @if (hasError('birthDate', 'required')) {
+      <p class="error">La fecha de nacimiento es obligatoria</p>
+    }
     <div class="password">
       <input [type]="showPassword() ? 'text' : 'password'" placeholder="Contraseña" formControlName="password">
       <button type="button" class="eye" (click)="showPassword.set(!showPassword())"><mat-icon>{{ showPassword() ? 'visibility' : 'visibility_off' }}</mat-icon></button>
     </div>
+    @if (hasError('password', 'required')) {
+      <p class="error">La contraseña es obligatoria</p>
+    }
+    @if (hasError('password', 'pattern')) {
+      <p class="error">La contraseña debe poseer al menos 8 caracteres, una mayúscula y un número</p>
+    }
     <div class="password">
       <input [type]="showRepeatPassword() ? 'text' : 'password'" placeholder="Repetir contraseña" formControlName="repeatPassword">
       <button type="button" class="eye" (click)="showRepeatPassword.set(!showRepeatPassword())"><mat-icon>{{ showRepeatPassword() ? 'visibility' : 'visibility_off' }}</mat-icon></button>
     </div>
+    @if (hasError('repeatPassword', 'required')) {
+      <p class="error">Repetí la contraseña</p>
+    } @else if (passwordsDontMatch()) {
+      <p class="error">Las contraseñas no coinciden</p>
+    }
     <button type="submit" [disabled]="form.invalid">Registrarme</button>
   </form>
   <p>¿Ya tenés cuenta? <a routerLink="/login">Iniciá sesión</a></p>

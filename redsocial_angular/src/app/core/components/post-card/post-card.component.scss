@@ -89,9 +89,28 @@
   gap: var(--space-3);
   color: var(--color-text-muted);
 
-  span {
+  span,
+  .like,
+  .delete {
     display: flex;
     align-items: center;
     gap: var(--space-1);
+  }
+
+  // el tacho queda a la derecha
+  .delete {
+    margin-left: auto;
+  }
+
+  .like,
+  .delete {
+    height: auto;
+    padding: 0;
+    color: inherit;
+    background: none;
+
+    &:hover {
+      background: none;
+    }
   }
 }

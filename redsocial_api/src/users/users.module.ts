@@ -4,9 +4,11 @@ import { UsersService } from './users.service.js';
 import { UsersController } from './users.controller.js';
 import { User, UserSchema } from './schemas/user.schema.js';
 import { Post, PostSchema } from '../posts/schemas/post.schema.js';
+import { FileModule } from '../file/file.module.js';
 
 @Module({
   imports: [
+    FileModule,
     MongooseModule.forFeature([
       { name: User.name, schema: UserSchema },
       { name: Post.name, schema: PostSchema },

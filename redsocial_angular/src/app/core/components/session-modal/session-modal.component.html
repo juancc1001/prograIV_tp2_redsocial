@@ -1,0 +1,11 @@
+@if (authService.sessionExpiring()) {
+  <div class="backdrop">
+    <div class="modal">
+      <p>Tu sesión está por expirar.</p>
+      <div class="actions">
+        <button type="button" class="logout" (click)="logout()">Cerrar sesión</button>
+        <button type="button" (click)="renew()">Renovar</button>
+      </div>
+    </div>
+  </div>
+}

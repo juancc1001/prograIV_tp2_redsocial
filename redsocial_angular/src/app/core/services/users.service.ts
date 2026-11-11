@@ -22,4 +22,8 @@ export class UsersService {
   getProfile(username: string): Observable<Profile> {
     return this.http.get<Profile>(`${this.apiUrl}/${username}`);
   }
+
+  updateProfile(formData: FormData): Observable<Profile> {
+    return this.http.patch<Profile>(`${this.apiUrl}/me`, formData);
+  }
 }

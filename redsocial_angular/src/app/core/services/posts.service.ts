@@ -15,8 +15,17 @@ export interface Post {
   createdAt: string;
   description: string;
   imageUrl: string;
+  likes: string[];
   likesCount: number;
   commentsCount: number;
+}
+
+export interface PostComment {
+  id: string;
+  text: string;
+  createdAt: string;
+  edited: boolean;
+  author: PostAuthor;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -24,11 +33,49 @@ export class PostsService {
   private readonly http = inject(HttpClient);
   private readonly apiUrl = environment.apiUrl;
 
-  getUserPosts(username: string): Observable<Post[]> {
-    return this.http.get<Post[]>(`${this.apiUrl}/posts/user/${username}`);
+  getUserPosts(username: string, offset: number, limit: number): Observable<Post[]> {
+    return this.http.get<Post[]>(`${this.apiUrl}/posts/user/${username}?offset=${offset}&limit=${limit}`);
+  }
+
+  // sort con formato "campo:asc|desc" separado por comas
+  getPosts(offset: number, limit: number, sort: string): Observable<Post[]> {
+    return this.http.get<Post[]>(`${this.apiUrl}/posts?offset=${offset}&limit=${limit}&sort=${sort}`);
+  }
+
+  like(id: string): Observable<{ likesCount: number }> {
+    return this.http.post<{ likesCount: number }>(`${this.apiUrl}/posts/${id}/like`, {});
+  }
+
+  unlike(id: string): Observable<{ likesCount: number }> {
+    return this.http.delete<{ likesCount: number }>(`${this.apiUrl}/posts/${id}/like`);
+  }
+
+  deletePost(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/posts/${id}`);
   }
 
   getFeed(): Observable<Post[]> {
     return this.http.get<Post[]>(`${this.apiUrl}/posts/feed`);
+  }
+
+  createPost(formData: FormData): Observable<Post> {
+    return this.http.post<Post>(`${this.apiUrl}/posts`, formData);
+  }
+
+  getPost(id: string): Observable<Post> {
+    return this.http.get<Post>(`${this.apiUrl}/posts/${id}`);
+  }
+
+  // vienen del más nuevo al más viejo
+  getComments(postId: string, offset: number, limit: number): Observable<PostComment[]> {
+    return this.http.get<PostComment[]>(`${this.apiUrl}/posts/${postId}/comments?offset=${offset}&limit=${limit}`);
+  }
+
+  addComment(postId: string, text: string): Observable<PostComment> {
+    return this.http.post<PostComment>(`${this.apiUrl}/posts/${postId}/comments`, { text });
+  }
+
+  editComment(postId: string, commentId: string, text: string): Observable<PostComment> {
+    return this.http.patch<PostComment>(`${this.apiUrl}/posts/${postId}/comments/${commentId}`, { text });
   }
 }

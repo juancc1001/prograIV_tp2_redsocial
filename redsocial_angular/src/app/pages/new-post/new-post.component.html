@@ -1,0 +1,78 @@
+<main class="new-post">
+  <p class="eyebrow">Nuevo cuadro</p>
+  <h1 class="heading">Revelá el cuadro de hoy.</h1>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="preview">
+      <div class="frame">
+        @if (files().length > 0) {
+          @if (isVideo(current())) {
+            <video [src]="previewUrls()[current()]" controls></video>
+          } @else {
+            <img [src]="previewUrls()[current()]">
+          }
+          <span class="chip">Vista previa</span>
+        }
+        @if (current() > 0) {
+          <button type="button" class="nav prev" (click)="current.set(current() - 1)">
+            <mat-icon>chevron_left</mat-icon>
+          </button>
+        }
+        @if (current() < files().length - 1) {
+          <button type="button" class="nav next" (click)="current.set(current() + 1)">
+            <mat-icon>chevron_right</mat-icon>
+          </button>
+        }
+        <label class="change" [class.empty]="files().length === 0">
+          <mat-icon>{{ files().length > 0 ? 'refresh' : 'add_photo_alternate' }}</mat-icon>
+          {{ files().length > 0 ? 'Cambiar' : 'Elegir archivo' }}
+          <input
+            type="file"
+            accept="image/*,video/*"
+            multiple
+            (change)="onFilesChange($event)">
+        </label>
+      </div>
+    </div>
+
+    <div class="fields">
+      @if (type() === 'ALBUM') {
+        <label class="field">
+          <span class="label">Título</span>
+          <input type="text" placeholder="Ponele nombre al álbum." formControlName="title">
+        </label>
+      }
+
+      <label class="field description">
+        <span class="label">Epígrafe</span>
+        <textarea placeholder="Contá qué hiciste hoy." formControlName="description"></textarea>
+      </label>
+
+      <label class="field">
+        <span class="label">¿Dónde fue?</span>
+        <div class="location">
+          <mat-icon>location_on</mat-icon>
+          <input type="text" placeholder="Costanera Sur, Buenos Aires" formControlName="location">
+        </div>
+      </label>
+
+      <button type="submit" class="submit" [disabled]="files().length === 0">Publicar</button>
+    </div>
+
+    <div class="gallery">
+      <label class="add">
+        <mat-icon>add_a_photo</mat-icon>
+        <input type="file" accept="image/*" multiple (change)="onAddFiles($event)">
+      </label>
+      @if (type() === 'ALBUM') {
+        @for (url of previewUrls(); track url) {
+          @if (isVideo($index)) {
+            <video class="thumb" [src]="url"></video>
+          } @else {
+            <img class="thumb" [src]="url">
+          }
+        }
+      }
+    </div>
+  </form>
+</main>

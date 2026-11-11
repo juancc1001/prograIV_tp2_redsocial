@@ -15,6 +15,7 @@ export class AuthGuard implements CanActivate {
     private readonly authService: AuthService,
   ) {}
 
+  //revisa principalmente que no esté expirado el token
   async canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest<Request & { user?: JwtPayload }>();
     const [type, token] = request.headers.authorization?.split(' ') ?? [];

@@ -1,8 +1,11 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
+import { FilesInterceptor } from '@nestjs/platform-express';
 import { PostsService } from './posts.service.js';
 import { CreatePostDto } from './dto/create-post.dto.js';
 import { UpdatePostDto } from './dto/update-post.dto.js';
 import { CreateCommentDto } from './dto/create-comment.dto.js';
+import { PaginationPipe } from '../common/pagination.pipe.js';
+import type { Pagination } from '../common/pagination.pipe.js';
 import { AuthGuard } from '../auth/auth.guard.js';
 import type { JwtPayload } from '../auth/auth.guard.js';
 import { CurrentUser } from '../auth/current-user.decorator.js';
@@ -11,6 +14,14 @@ import { CurrentUser } from '../auth/current-user.decorator.js';
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
+  @Get()
+  //@query obtiene los elementos de la query como clave valor 
+  //pipe transforma a tipo Pagination y valida los datos
+  @UseGuards(AuthGuard)
+  getPosts(@Query(PaginationPipe) pagination: Pagination) {
+    return this.postsService.getPosts(pagination);
+  }
+
   @Get('feed')
   @UseGuards(AuthGuard)
   getFeed(@CurrentUser() user: JwtPayload) {
@@ -18,8 +29,8 @@ export class PostsController {
   }
 
   @Get('user/:username')
-  getUserPosts(@Param('username') username: string) {
-    return this.postsService.getUserPosts(username);
+  getUserPosts(@Param('username') username: string, @Query(PaginationPipe) pagination: Pagination) {
+    return this.postsService.getUserPosts(username, pagination);
   }
 
   @Get(':id')
@@ -29,8 +40,9 @@ export class PostsController {
 
   @Post()
   @UseGuards(AuthGuard)
-  create(@CurrentUser() user: JwtPayload, @Body() dto: CreatePostDto) {
-    return this.postsService.create(user.sub, dto);
+  @UseInterceptors(FilesInterceptor('files'))
+  create(@CurrentUser() user: JwtPayload, @Body() dto: CreatePostDto, @UploadedFiles() files: Express.Multer.File[]) {
+    return this.postsService.create(user.sub, dto, files);
   }
 
   @Patch(':id')
@@ -58,14 +70,20 @@ export class PostsController {
   }
 
   @Get(':id/comments')
-  getComments(@Param('id') id: string) {
-    return this.postsService.getComments(id);
+  getComments(@Param('id') id: string, @Query(PaginationPipe) pagination: Pagination) {
+    return this.postsService.getComments(id, pagination);
   }
 
   @Post(':id/comments')
   @UseGuards(AuthGuard)
   addComment(@CurrentUser() user: JwtPayload, @Param('id') id: string, @Body() dto: CreateCommentDto) {
     return this.postsService.addComment(user.sub, id, dto);
+  }
+
+  @Patch(':id/comments/:commentId')
+  @UseGuards(AuthGuard)
+  editComment(@CurrentUser() user: JwtPayload, @Param('id') id: string, @Param('commentId') commentId: string, @Body() dto: CreateCommentDto) {
+    return this.postsService.editComment(user.sub, id, commentId, dto);
   }
 
   @Delete(':id/comments/:commentId')

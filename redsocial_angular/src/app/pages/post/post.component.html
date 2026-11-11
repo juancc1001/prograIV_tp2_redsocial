@@ -1,0 +1,68 @@
+<main class="post-page">
+  @if (post(); as post) {
+    <article class="post">
+      <header class="header">
+        @if (post.author; as author) {
+          <a class="author" [routerLink]="['/', author.username]">
+            <div class="avatar">
+              @if (author.profilePictureUrl) {
+                <img [src]="author.profilePictureUrl">
+              } @else {
+                <mat-icon>person</mat-icon>
+              }
+            </div>
+            <span>{{ author.username }}</span>
+          </a>
+        }
+        <span class="date">{{ post.createdAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+      </header>
+      @if (post.title) {
+        <h1 class="title">{{ post.title }}</h1>
+      }
+      <img class="photo" [src]="post.imageUrl" [alt]="post.title">
+      @if (post.description) {
+        <p class="description">{{ post.description }}</p>
+      }
+    </article>
+  }
+
+  <section class="comments">
+    <h2>Comentarios</h2>
+
+    <form class="comment-form" [formGroup]="commentForm" (ngSubmit)="addComment()">
+      <input type="text" placeholder="Escribí un comentario..." formControlName="text">
+      <button type="submit">Comentar</button>
+    </form>
+
+    @for (comment of comments(); track comment.id) {
+      <div class="comment">
+        <div class="comment-header">
+          <strong>{{ comment.author.username }}</strong>
+          <span class="date">{{ comment.createdAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+          @if (comment.edited) {
+            <span class="edited">(editado)</span>
+          }
+          @if (isMine(comment) && editingId() !== comment.id) {
+            <button type="button" class="icon" (click)="startEdit(comment)">
+              <mat-icon>edit</mat-icon>
+            </button>
+          }
+        </div>
+
+        @if (editingId() === comment.id) {
+          <form class="comment-form" [formGroup]="editForm" (ngSubmit)="saveEdit(comment)">
+            <input type="text" formControlName="text">
+            <button type="submit">Guardar</button>
+            <button type="button" class="cancel" (click)="cancelEdit()">Cancelar</button>
+          </form>
+        } @else {
+          <p class="text">{{ comment.text }}</p>
+        }
+      </div>
+    }
+
+    @if (hasMore()) {
+      <button type="button" class="more" (click)="loadComments()">Cargar más</button>
+    }
+  </section>
+</main>

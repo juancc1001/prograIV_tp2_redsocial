@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument, Types } from 'mongoose';
+import { HydratedDocument, SchemaTypes, Types } from 'mongoose';
 
 export type PostDocument = HydratedDocument<Post>;
 
@@ -34,18 +34,21 @@ export const MediaSchema = SchemaFactory.createForClass(Media);
 
 @Schema({ timestamps: true })
 export class Comment {
-  @Prop({ type: Types.ObjectId, ref: 'User', required: true })
+  @Prop({ type: SchemaTypes.ObjectId, ref: 'User', required: true })
   author: Types.ObjectId;
 
   @Prop({ required: true })
   text: string;
+
+  @Prop({ default: false })
+  edited: boolean;
 }
 
 export const CommentSchema = SchemaFactory.createForClass(Comment);
 
 @Schema({ timestamps: true })
 export class Post {
-  @Prop({ type: Types.ObjectId, ref: 'User', required: true })
+  @Prop({ type: SchemaTypes.ObjectId, ref: 'User', required: true })
   author: Types.ObjectId;
 
   @Prop({ required: true, enum: PostType })
@@ -58,14 +61,20 @@ export class Post {
   @Prop()
   description: string;
 
+  @Prop()
+  location: string;
+
   @Prop({ type: [MediaSchema], required: true })
   media: Media[];
 
-  @Prop({ type: [{ type: Types.ObjectId, ref: 'User' }], default: [] })
+  @Prop({ type: [{ type: SchemaTypes.ObjectId, ref: 'User' }], default: [] })
   likes: Types.ObjectId[];
 
   @Prop({ type: [CommentSchema], default: [] })
   comments: Comment[];
+
+  @Prop({ default: false })
+  deleted: boolean;
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post);

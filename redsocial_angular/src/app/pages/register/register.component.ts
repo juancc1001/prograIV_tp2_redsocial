@@ -27,9 +27,21 @@ export class RegisterComponent {
     email: new FormControl('', [Validators.required, Validators.email]),
     username: new FormControl('', Validators.required),
     birthDate: new FormControl('', Validators.required),
-    password: new FormControl('', Validators.required),
+    password: new FormControl('', [Validators.required, Validators.pattern(/^(?=.*[A-Z])(?=.*\d).{8,}$/)]),
     repeatPassword: new FormControl('', Validators.required),
   });
+
+  hasError(field: string, error: string): boolean {
+    const control = this.form.get(field)!;
+    //dirty es true cuando el usuario interactua con el form control
+    //touched es true cuando el usuario toca y sale del form control
+    return (control.dirty || control.touched) && control.hasError(error);
+  }
+
+  passwordsDontMatch(): boolean {
+    const repeatPassword = this.form.controls.repeatPassword;
+    return repeatPassword.dirty && this.form.value.password !== repeatPassword.value;
+  }
 
   onSubmit(): void {
     const { repeatPassword, ...data } = this.form.value;

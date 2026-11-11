@@ -5,11 +5,12 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { filter, map } from 'rxjs';
 import { ErrorSnackbarComponent } from './core/components/error-snackbar/error-snackbar.component';
 import { NavbarComponent } from './core/components/navbar/navbar.component';
+import { SessionModalComponent } from './core/components/session-modal/session-modal.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, ErrorSnackbarComponent, NavbarComponent],
+  imports: [CommonModule, RouterOutlet, ErrorSnackbarComponent, NavbarComponent, SessionModalComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

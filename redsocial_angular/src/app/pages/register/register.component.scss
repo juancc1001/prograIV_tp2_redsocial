@@ -4,3 +4,9 @@ form {
   gap: var(--space-3);
   margin-bottom: var(--space-3);
 }
+
+.error {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-danger);
+}

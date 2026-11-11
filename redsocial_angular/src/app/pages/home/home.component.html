@@ -1,5 +1,11 @@
 <main class="feed">
+  <button type="button" class="sort" (click)="toggleSort()">
+    <mat-icon>sort</mat-icon> {{ sortByLikes() ? 'Más gustados' : 'Más recientes' }}
+  </button>
   @for (post of posts(); track post.id) {
-    <app-post-card [post]="post" />
+    <app-post-card [post]="post" (deleted)="removePost($event)" />
+  }
+  @if (hasMore()) {
+    <button type="button" class="more" (click)="loadPosts()">Cargar más</button>
   }
 </main>

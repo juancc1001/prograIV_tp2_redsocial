@@ -6,3 +6,16 @@
   margin: 0 auto;
   padding: var(--space-5) 0;
 }
+
+.sort {
+  display: flex;
+  align-items: center;
+  align-self: flex-end;
+  gap: var(--space-1);
+}
+
+.more {
+  align-self: center;
+  padding: 0 var(--space-5);
+  font-weight: 800;
+}
