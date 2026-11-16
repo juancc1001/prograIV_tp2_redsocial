@@ -62,7 +62,7 @@ export class UsersService {
   // alta y baja lógica: el usuario queda en la base, solo cambia isActive
   async setActive(role: Role, username: string, isActive: boolean) {
     if (role !== Role.Admin) {
-      throw new ForbiddenException('Solo un administrador puede habilitar o deshabilitar usuarios');
+      throw new ForbiddenException('Solo un administrador puede activar o desactivar usuarios');
     }
 
     const user = await this.userModel.findOne({ username });

@@ -49,7 +49,7 @@ export class AuthService {
       throw new UnauthorizedException('Usuario o contraseña incorrectos');
     }
     if (!user.isActive) {
-      throw new ForbiddenException('Tu usuario está deshabilitado');
+      throw new ForbiddenException('Tu usuario está desactivado');
     }
 
     return this.createToken(user);
