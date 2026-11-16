@@ -2,10 +2,16 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
+import { ReferenceKind, ReferenceResult } from './references.service';
 
 export interface PostAuthor {
   username: string;
   profilePictureUrl?: string;
+}
+
+export interface PostReference extends ReferenceResult {
+  kind: ReferenceKind;
+  rating: number;
 }
 
 export interface Post {
@@ -18,6 +24,7 @@ export interface Post {
   likes: string[];
   likesCount: number;
   commentsCount: number;
+  reference?: PostReference;
 }
 
 export interface PostComment {

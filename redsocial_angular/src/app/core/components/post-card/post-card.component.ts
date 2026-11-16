@@ -42,6 +42,8 @@ export class PostCardComponent implements OnInit, AfterViewInit {
   commenting = signal(false);
   private commentsLoaded = false;
 
+  stars = [1, 2, 3, 4, 5];
+
   // id del comentario que se está editando, null si ninguno
   editingId = signal<string | null>(null);
 

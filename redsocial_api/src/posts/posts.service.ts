@@ -1,10 +1,10 @@
-import { ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, PipelineStage, Types, isValidObjectId } from 'mongoose';
-import { Media, MediaType, Post } from './schemas/post.schema.js';
+import { Media, MediaType, Post, Reference, ReferenceKind } from './schemas/post.schema.js';
 import { Role, User } from '../users/schemas/user.schema.js';
 import { FileService } from '../file/file.service.js';
-import { CreatePostDto } from './dto/create-post.dto.js';
+import { CreatePostDto, ReferenceDto } from './dto/create-post.dto.js';
 import { UpdatePostDto } from './dto/update-post.dto.js';
 import { CreateCommentDto } from './dto/create-comment.dto.js';
 import type { Pagination } from '../common/pagination.pipe.js';
@@ -55,6 +55,12 @@ export class PostsService {
   }
 
   async create(userId: string, dto: CreatePostDto, files: Express.Multer.File[]) {
+    // se valida antes de subir los archivos
+    let reference: Reference | undefined;
+    if (dto.reference) {
+      reference = this.toReference(dto.reference);
+    }
+
     const media: Media[] = [];
     for (let i = 0; i < files.length; i++) {
       const uploaded = await this.fileService.upload(files[i].buffer);
@@ -74,6 +80,7 @@ export class PostsService {
       description: dto.description,
       location: dto.location,
       media: media,
+      reference: reference,
     });
     return this.findOne(post.id);
   }
@@ -82,6 +89,11 @@ export class PostsService {
     const post = await this.findOwnPost(userId, id);
     post.title = dto.title ?? post.title;
     post.description = dto.description ?? post.description;
+    if (dto.reference === null) {
+      post.reference = undefined;
+    } else if (dto.reference) {
+      post.reference = this.toReference(dto.reference);
+    }
     await post.save();
     return this.findOne(id);
   }
@@ -216,6 +228,7 @@ export class PostsService {
           title: 1,
           description: 1,
           media: 1,
+          reference: 1,
           createdAt: 1,
           imageUrl: { $first: '$media.url' },
           likes: 1,
@@ -229,6 +242,33 @@ export class PostsService {
       },
     );
     return this.postModel.aggregate(pipeline);
+  }
+
+  private toReference(dto: ReferenceDto): Reference {
+    if (!Object.values(ReferenceKind).includes(dto.kind)) {
+      throw new BadRequestException('Tipo de referencia inválido');
+    }
+    if (!dto.externalId || !dto.title) {
+      throw new BadRequestException('Falta la película, libro o juego elegido');
+    }
+    const rating = Number(dto.rating);
+    if (!Number.isInteger(rating) || rating < 1 || rating > 5) {
+      throw new BadRequestException('El puntaje tiene que ser de 1 a 5 estrellas');
+    }
+
+    let year: number | undefined;
+    if (dto.year) {
+      year = Number(dto.year);
+    }
+
+    return {
+      kind: dto.kind,
+      externalId: dto.externalId,
+      title: dto.title,
+      year: year,
+      imageUrl: dto.imageUrl,
+      rating: rating,
+    };
   }
 
   private async findOwnPost(userId: string, id: string) {

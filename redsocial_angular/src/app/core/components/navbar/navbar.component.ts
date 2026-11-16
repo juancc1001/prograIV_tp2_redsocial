@@ -5,12 +5,13 @@ import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../services/auth.service';
 import { UsersService } from '../../services/users.service';
 import { LoaderService } from '../../services/loader.service';
+import { IsAdminDirective } from '../../directives/is-admin.directive';
 import { catchError, finalize, of, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [MatIconModule, RouterLink],
+  imports: [MatIconModule, RouterLink, IsAdminDirective],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss'
 })

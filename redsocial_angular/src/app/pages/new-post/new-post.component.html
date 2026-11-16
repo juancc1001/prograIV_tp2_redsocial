@@ -56,7 +56,61 @@
         </div>
       </label>
 
-      <button type="submit" class="submit" [disabled]="files().length === 0">Publicar</button>
+      <div class="field">
+        <span class="label">Referencia</span>
+        <div class="kinds">
+          @for (kind of kinds; track kind.value) {
+            <button type="button" class="kind" [class.active]="referenceKind() === kind.value" (click)="toggleKind(kind.value)">
+              {{ kind.label }}
+            </button>
+          }
+        </div>
+
+        @if (referenceKind()) {
+          @if (reference(); as reference) {
+            <div class="reference">
+              @if (reference.imageUrl) {
+                <img [src]="reference.imageUrl" [alt]="reference.title">
+              }
+              <div class="reference-info">
+                <strong>{{ reference.title }}</strong>
+                @if (reference.year) {
+                  <span>{{ reference.year }}</span>
+                }
+              </div>
+              <button type="button" class="clear" (click)="clearReference()">
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
+            <div class="stars">
+              @for (star of stars; track star) {
+                <button type="button" (click)="rating.set(star)">
+                  <mat-icon>{{ star <= rating() ? 'star' : 'star_border' }}</mat-icon>
+                </button>
+              }
+            </div>
+          } @else {
+            <input type="text" placeholder="Buscá por título" [formControl]="search">
+            @if (results().length > 0) {
+              <div class="results">
+                @for (result of results(); track result.externalId) {
+                  <button type="button" class="result" (click)="selectReference(result)">
+                    @if (result.imageUrl) {
+                      <img [src]="result.imageUrl" [alt]="result.title">
+                    }
+                    <span>{{ result.title }}</span>
+                    @if (result.year) {
+                      <span class="year">{{ result.year }}</span>
+                    }
+                  </button>
+                }
+              </div>
+            }
+          }
+        }
+      </div>
+
+      <button type="submit" class="submit" [disabled]="files().length === 0 || referenceIncomplete()">Publicar</button>
     </div>
 
     <div class="gallery">

@@ -7,8 +7,9 @@ const SORT_FIELDS = ['createdAt', 'likesCount'];
 // los campos o direcciones inválidos se ignoran; si no queda nada, por fecha
 @Injectable()
 export class PostSortingPipe implements PipeTransform<string | undefined, Record<string, 1 | -1>> {
+  
   transform(value: string | undefined): Record<string, 1 | -1> {
-    const sort: Record<string, 1 | -1> = {};
+    const sort: Record<string, 1 | -1> = {}; //lista clave valor
     const parts = (value ?? '').split(',');
 
     for (const part of parts) {

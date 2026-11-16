@@ -32,6 +32,36 @@ export class Media {
 
 export const MediaSchema = SchemaFactory.createForClass(Media);
 
+export enum ReferenceKind {
+  Movie = 'MOVIE',
+  Book = 'BOOK',
+  Game = 'GAME',
+}
+
+// copia de los datos de la api externa para no consultarla en cada listado
+@Schema({ _id: false })
+export class Reference {
+  @Prop({ required: true, enum: ReferenceKind })
+  kind: ReferenceKind;
+
+  @Prop({ required: true })
+  externalId: string;
+
+  @Prop({ required: true })
+  title: string;
+
+  @Prop()
+  year?: number;
+
+  @Prop()
+  imageUrl?: string;
+
+  @Prop({ required: true, min: 1, max: 5 })
+  rating: number;
+}
+
+export const ReferenceSchema = SchemaFactory.createForClass(Reference);
+
 @Schema({ timestamps: true })
 export class Comment {
   @Prop({ type: SchemaTypes.ObjectId, ref: 'User', required: true })
@@ -66,6 +96,9 @@ export class Post {
 
   @Prop({ type: [MediaSchema], required: true })
   media: Media[];
+
+  @Prop({ type: ReferenceSchema })
+  reference?: Reference;
 
   @Prop({ type: [{ type: SchemaTypes.ObjectId, ref: 'User' }], default: [] })
   likes: Types.ObjectId[];
