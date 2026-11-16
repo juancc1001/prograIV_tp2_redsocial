@@ -39,13 +39,20 @@
         <div class="comment-header">
           <strong>{{ comment.author.username }}</strong>
           <span class="date">{{ comment.createdAt | date: 'dd/MM/yyyy HH:mm' }}</span>
-          @if (comment.edited) {
+          @if (comment.modificado) {
             <span class="edited">(editado)</span>
           }
-          @if (isMine(comment) && editingId() !== comment.id) {
-            <button type="button" class="icon" (click)="startEdit(comment)">
-              <mat-icon>edit</mat-icon>
-            </button>
+          @if (canDelete(comment) && editingId() !== comment.id) {
+            <div class="actions">
+              @if (isMine(comment)) {
+                <button type="button" class="icon" (click)="startEdit(comment)">
+                  <mat-icon>edit</mat-icon>
+                </button>
+              }
+              <button type="button" class="icon" (click)="deleteComment(comment)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
           }
         </div>
 

@@ -1,41 +1,107 @@
-<article class="card">
-  <header class="header">
-    <div>
-      <h3 class="title">{{ post.title }}</h3>
-      <span class="date">{{ post.createdAt | date: 'dd/MM/yyyy HH:mm' }}</span>
-    </div>
-    @if (post.author; as author) {
-      <div class="author">
-        <span>{{ author.username }}</span>
-        <div class="avatar">
-          @if (author.profilePictureUrl) {
-            <img [src]="author.profilePictureUrl">
-          } @else {
-            <mat-icon>person</mat-icon>
-          }
-        </div>
+<article class="card" [class.filled]="filled()">
+  <div class="content">
+    <header class="header">
+      <div>
+        <h3 class="title">{{ post.title }}</h3>
+        <span class="date">{{ post.createdAt | date: 'dd/MM/yyyy HH:mm' }}</span>
       </div>
+      @if (post.author; as author) {
+        <div class="author">
+          <span>{{ author.username }}</span>
+          <div class="avatar">
+            @if (author.profilePictureUrl) {
+              <img [src]="author.profilePictureUrl">
+            } @else {
+              <mat-icon>person</mat-icon>
+            }
+          </div>
+        </div>
+      }
+    </header>
+    <a [routerLink]="['/post', post.id]">
+      <img class="photo" [src]="post.imageUrl" [alt]="post.title">
+    </a>
+    <p #description class="description" [class.clamped]="!expanded()">{{ post.description }}</p>
+    @if (isLong() && !expanded()) {
+      <button type="button" class="more" (click)="expanded.set(true)">ver más...</button>
     }
-  </header>
-  <a [routerLink]="['/post', post.id]">
-    <img #photo class="photo" [src]="post.imageUrl" [alt]="post.title">
-  </a>
-  <p #description class="description" [class.clamped]="!expanded()">{{ post.description }}</p>
-  @if (isLong() && !expanded()) {
-    <button type="button" class="more" (click)="expanded.set(true)">ver más...</button>
-  }
-  <div class="stats">
-    <button type="button" class="like" (click)="toggleLike()">
-      <mat-icon>{{ liked() ? 'favorite' : 'favorite_border' }}</mat-icon> {{ likesCount() }}
-    </button>
-    <span><mat-icon>chat_bubble_outline</mat-icon> {{ post.commentsCount }}</span>
-    <button type="button" class="fullscreen" (click)="openFullscreen()">
-      <mat-icon>fullscreen</mat-icon>
-    </button>
-    @if (isOwner()) {
-      <button type="button" class="delete" (click)="deletePost()">
-        <mat-icon>delete</mat-icon>
+    <div class="stats">
+      <button type="button" class="like" (click)="toggleLike()">
+        <mat-icon>{{ liked() ? 'favorite' : 'favorite_border' }}</mat-icon> {{ likesCount() }}
       </button>
+      <button type="button" class="comment-toggle" (click)="commenting.set(!commenting())">
+        <mat-icon>chat_bubble_outline</mat-icon> {{ commentsCount() }}
+      </button>
+      <button type="button" class="fill" (click)="toggleFilled()">
+        <mat-icon>{{ filled() ? 'fullscreen_exit' : 'fullscreen' }}</mat-icon>
+      </button>
+      @if (isOwner()) {
+        <button type="button" class="delete" (click)="deletePost()">
+          <mat-icon>delete</mat-icon>
+        </button>
+      }
+    </div>
+    <!-- en la card agrandada el campo va abajo del panel de comentarios -->
+    @if (commenting() && !filled()) {
+      <form class="comment-form" [formGroup]="commentForm" (ngSubmit)="addComment()">
+        <textarea rows="2" placeholder="Escribí un comentario..." formControlName="text"></textarea>
+        <button type="submit" class="send">
+          <mat-icon>arrow_upward</mat-icon>
+        </button>
+      </form>
     }
   </div>
+
+  @if (filled()) {
+    <aside class="comments">
+      <div class="list">
+        <h3>Comentarios</h3>
+        @for (comment of comments(); track comment.id) {
+          <div class="comment">
+            <div class="comment-header">
+              <strong>{{ comment.author.username }}</strong>
+              <span class="date">{{ comment.createdAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+              @if (comment.modificado) {
+                <span class="edited">(editado)</span>
+              }
+              @if (canDelete(comment) && editingId() !== comment.id) {
+                <div class="comment-actions">
+                  @if (isMine(comment)) {
+                    <button type="button" (click)="startEdit(comment)">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                  }
+                  <button type="button" (click)="deleteComment(comment)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              }
+            </div>
+            @if (editingId() === comment.id) {
+              <form class="edit-form" [formGroup]="editForm" (ngSubmit)="saveEdit(comment)">
+                <textarea rows="2" formControlName="text"></textarea>
+                <button type="submit">
+                  <mat-icon>check</mat-icon>
+                </button>
+                <button type="button" (click)="cancelEdit()">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </form>
+            } @else {
+              <p class="text">{{ comment.text }}</p>
+            }
+          </div>
+        }
+        @if (hasMore()) {
+          <button type="button" class="more" (click)="loadComments()">Cargar más</button>
+        }
+      </div>
+      <form class="comment-form" [formGroup]="commentForm" (ngSubmit)="addComment()">
+        <textarea rows="2" placeholder="Escribí un comentario..." formControlName="text"></textarea>
+        <button type="submit" class="send">
+          <mat-icon>arrow_upward</mat-icon>
+        </button>
+      </form>
+    </aside>
+  }
 </article>

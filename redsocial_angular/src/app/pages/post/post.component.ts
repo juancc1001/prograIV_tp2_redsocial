@@ -86,6 +86,11 @@ export class PostComponent {
     return comment.author.username === this.authService.username();
   }
 
+  // editar solo el autor, borrar el autor o un admin
+  canDelete(comment: PostComment): boolean {
+    return this.isMine(comment) || this.authService.isAdmin();
+  }
+
   startEdit(comment: PostComment): void {
     this.editingId.set(comment.id);
     this.editForm.setValue({ text: comment.text });
@@ -116,6 +121,16 @@ export class PostComponent {
         this.comments.set(comments);
         this.editingId.set(null);
       },
+      error: error => this.errorService.show(error),
+    });
+  }
+
+  deleteComment(comment: PostComment): void {
+    this.loaderService.show();
+    this.postsService.deleteComment(this.postId, comment.id).pipe(
+      finalize(() => this.loaderService.hide())
+    ).subscribe({
+      next: () => this.comments.set(this.comments().filter(item => item.id !== comment.id)),
       error: error => this.errorService.show(error),
     });
   }

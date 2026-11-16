@@ -21,6 +21,14 @@ export class AuthController {
     return this.authService.login(dto);
   }
 
+  // el guard valida el token (firma, vencimiento y que no esté revocado) y si falla devuelve 401
+  @Post('authorize')
+  @HttpCode(200)
+  @UseGuards(AuthGuard)
+  authorize(@CurrentUser() user: JwtPayload) {
+    return this.authService.authorize(user.sub);
+  }
+
   @Post('refresh')
   @HttpCode(200)
   @UseGuards(AuthGuard)

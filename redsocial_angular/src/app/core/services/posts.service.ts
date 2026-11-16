@@ -24,7 +24,7 @@ export interface PostComment {
   id: string;
   text: string;
   createdAt: string;
-  edited: boolean;
+  modificado: boolean;
   author: PostAuthor;
 }
 
@@ -76,6 +76,10 @@ export class PostsService {
   }
 
   editComment(postId: string, commentId: string, text: string): Observable<PostComment> {
-    return this.http.patch<PostComment>(`${this.apiUrl}/posts/${postId}/comments/${commentId}`, { text });
+    return this.http.put<PostComment>(`${this.apiUrl}/posts/${postId}/comments/${commentId}`, { text });
+  }
+
+  deleteComment(postId: string, commentId: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/posts/${postId}/comments/${commentId}`);
   }
 }

@@ -115,11 +115,16 @@
   color: var(--color-text-muted);
 }
 
-// el lápiz queda a la derecha
+// lápiz y tacho quedan a la derecha
+.actions {
+  display: flex;
+  gap: var(--space-1);
+  margin-left: auto;
+}
+
 .icon {
   display: flex;
   height: auto;
-  margin-left: auto;
   padding: 0;
   color: var(--color-text-muted);
   background: none;

@@ -6,6 +6,9 @@
   <nav class="links">
     <a>Seguidos</a>
     <a>Explorar</a>
+    @if (authService.isAdmin()) {
+      <a>Dashboards</a>
+    }
   </nav>
   <div class="search">
     <mat-icon>search</mat-icon>

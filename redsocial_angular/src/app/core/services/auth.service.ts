@@ -53,6 +53,14 @@ export class AuthService {
     return this.readPayload(token).sub as string;
   });
 
+  readonly isAdmin = computed(() => {
+    const token = this.token();
+    if (!token) {
+      return false;
+    }
+    return this.readPayload(token).role === 'ADMIN';
+  });
+
   constructor() {
     const token = this.token();
     if (token) {

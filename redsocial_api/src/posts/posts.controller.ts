@@ -3,7 +3,6 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { PostsService } from './posts.service.js';
 import { CreatePostDto } from './dto/create-post.dto.js';
 import { UpdatePostDto } from './dto/update-post.dto.js';
-import { CreateCommentDto } from './dto/create-comment.dto.js';
 import { PaginationPipe } from '../common/pagination.pipe.js';
 import type { Pagination } from '../common/pagination.pipe.js';
 import { PostSortingPipe } from './post-sorting.pipe.js';
@@ -76,28 +75,5 @@ export class PostsController {
   @UseGuards(AuthGuard)
   unlike(@CurrentUser() user: JwtPayload, @Param('id') id: string) {
     return this.postsService.unlike(user.sub, id);
-  }
-
-  @Get(':id/comments')
-  getComments(@Param('id') id: string, @Query(PaginationPipe) pagination: Pagination) {
-    return this.postsService.getComments(id, pagination);
-  }
-
-  @Post(':id/comments')
-  @UseGuards(AuthGuard)
-  addComment(@CurrentUser() user: JwtPayload, @Param('id') id: string, @Body() dto: CreateCommentDto) {
-    return this.postsService.addComment(user.sub, id, dto);
-  }
-
-  @Patch(':id/comments/:commentId')
-  @UseGuards(AuthGuard)
-  editComment(@CurrentUser() user: JwtPayload, @Param('id') id: string, @Param('commentId') commentId: string, @Body() dto: CreateCommentDto) {
-    return this.postsService.editComment(user.sub, id, commentId, dto);
-  }
-
-  @Delete(':id/comments/:commentId')
-  @UseGuards(AuthGuard)
-  removeComment(@CurrentUser() user: JwtPayload, @Param('id') id: string, @Param('commentId') commentId: string) {
-    return this.postsService.removeComment(user.sub, id, commentId);
   }
 }

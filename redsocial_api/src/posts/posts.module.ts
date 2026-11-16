@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PostsService } from './posts.service.js';
 import { PostsController } from './posts.controller.js';
+import { CommentsController } from './comments.controller.js';
 import { Post, PostSchema } from './schemas/post.schema.js';
 import { User, UserSchema } from '../users/schemas/user.schema.js';
 import { FileModule } from '../file/file.module.js';
@@ -14,7 +15,7 @@ import { FileModule } from '../file/file.module.js';
       { name: User.name, schema: UserSchema },
     ]),
   ],
-  controllers: [PostsController],
+  controllers: [PostsController, CommentsController],
   providers: [PostsService],
 })
 export class PostsModule {}

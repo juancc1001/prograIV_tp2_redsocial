@@ -41,7 +41,7 @@ export class Comment {
   text: string;
 
   @Prop({ default: false })
-  edited: boolean;
+  modificado: boolean;
 }
 
 export const CommentSchema = SchemaFactory.createForClass(Comment);

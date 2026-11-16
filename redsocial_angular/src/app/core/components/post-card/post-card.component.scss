@@ -58,11 +58,6 @@
   object-fit: cover;
   margin: 0 auto;
   border-radius: 12px;
-
-  // en pantalla completa se muestra la foto entera, sin recortar
-  &:fullscreen {
-    object-fit: contain;
-  }
 }
 
 .description {
@@ -94,9 +89,9 @@
   gap: var(--space-3);
   color: var(--color-text-muted);
 
-  span,
   .like,
-  .fullscreen,
+  .comment-toggle,
+  .fill,
   .delete {
     display: flex;
     align-items: center;
@@ -109,7 +104,8 @@
   }
 
   .like,
-  .fullscreen,
+  .comment-toggle,
+  .fill,
   .delete {
     height: auto;
     padding: 0;
@@ -119,5 +115,148 @@
     &:hover {
       background: none;
     }
+  }
+}
+
+.comment-form {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+
+  textarea {
+    flex: 1;
+    padding: 8px 12px;
+    border: 2px solid var(--color-border);
+    border-radius: 12px;
+  }
+
+  .send {
+    display: flex;
+    flex-shrink: 0;
+    align-self: center;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border-radius: 50%;
+  }
+}
+
+// card agrandada en su lugar (empuja el resto hacia abajo): post a la izquierda y comentarios a la derecha
+.card.filled {
+  display: flex;
+  width: 90vw;
+  height: 75vh;
+  // el feed es más angosto que la card: se centra respecto de la pantalla
+  margin: 0 calc(50% - 45vw);
+  padding: 0;
+
+  .content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 0;
+    padding: var(--space-3);
+  }
+
+  .header,
+  .description,
+  .stats {
+    width: 100%;
+  }
+
+  // la foto ocupa el alto que dejan libre el header, la descripción y los stats
+  a {
+    flex: 1;
+    min-height: 0;
+  }
+
+  .photo {
+    width: auto;
+    height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+  }
+}
+
+// la lista scrollea y el campo de comentario queda fijo abajo a la derecha
+.comments {
+  display: flex;
+  flex-direction: column;
+  width: 360px;
+  padding: var(--space-3);
+  border-left: 1px solid var(--color-border);
+
+  .list {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    overflow-y: auto;
+    // scroll finito, sin fondo
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border) transparent;
+  }
+
+  h3 {
+    margin: 0;
+  }
+}
+
+.comment {
+  padding: var(--space-3);
+  background: var(--color-bg);
+  border-radius: 12px;
+
+  .text {
+    margin: 0;
+  }
+}
+
+.comment-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.edited {
+  font-size: var(--font-size-sm);
+  font-style: italic;
+  color: var(--color-text-muted);
+}
+
+// lápiz y tacho quedan a la derecha
+.comment-actions {
+  display: flex;
+  gap: var(--space-1);
+  margin-left: auto;
+}
+
+.edit-form {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+
+  textarea {
+    flex: 1;
+    padding: 8px 12px;
+    border: 2px solid var(--color-border);
+    border-radius: 12px;
+  }
+}
+
+.comment-actions button,
+.edit-form button {
+  display: flex;
+  height: auto;
+  padding: 0;
+  color: var(--color-text-muted);
+  background: none;
+
+  &:hover {
+    background: none;
   }
 }

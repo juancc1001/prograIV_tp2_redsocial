@@ -52,6 +52,15 @@ export class AuthService {
     return this.createToken(user);
   }
 
+  // el token ya lo validó el guard, acá solo se devuelven los datos del usuario
+  async authorize(userId: string) {
+    const user = await this.userModel.findById(userId).select('-passwordHash');
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+    return user;
+  }
+
   // entrega un token nuevo y revoca el anterior
   async refresh(userId: string, oldToken: string) {
     const user = await this.userModel.findById(userId);

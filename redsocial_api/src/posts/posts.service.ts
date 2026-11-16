@@ -13,7 +13,7 @@ interface PopulatedComment {
   _id: Types.ObjectId;
   text: string;
   createdAt: Date;
-  edited: boolean;
+  modificado: boolean;
   author: User;
 }
 
@@ -166,7 +166,7 @@ export class PostsService {
     // el $ del update apunta al comentario que encontró el filtro
     const result = await this.postModel.updateOne(
       { _id: id, deleted: { $ne: true }, comments: { $elemMatch: { _id: commentId, author: userId } } },
-      { $set: { 'comments.$.text': dto.text, 'comments.$.edited': true } },
+      { $set: { 'comments.$.text': dto.text, 'comments.$.modificado': true } },
     );
     if (result.matchedCount === 0) {
       throw new NotFoundException('Comentario no encontrado');
@@ -174,13 +174,17 @@ export class PostsService {
     return this.getComment(id, commentId);
   }
 
-  async removeComment(userId: string, id: string, commentId: string) {
+  async removeComment(userId: string, role: Role, id: string, commentId: string) {
     this.checkId(id);
     this.checkId(commentId);
-    // solo se borra si el comentario es del usuario
+    // el admin borra cualquier comentario, el resto solo los suyos
+    const filter: Record<string, unknown> = { _id: commentId };
+    if (role !== Role.Admin) {
+      filter.author = userId;
+    }
     const result = await this.postModel.updateOne(
       { _id: id, deleted: { $ne: true } },
-      { $pull: { comments: { _id: commentId, author: userId } } },
+      { $pull: { comments: filter } },
     );
     if (result.modifiedCount === 0) {
       throw new NotFoundException('Comentario no encontrado');
@@ -255,7 +259,7 @@ export class PostsService {
       id: comment._id,
       text: comment.text,
       createdAt: comment.createdAt,
-      edited: comment.edited,
+      modificado: comment.modificado,
       author: {
         username: comment.author.username,
         profilePictureUrl: comment.author.profilePictureUrl,

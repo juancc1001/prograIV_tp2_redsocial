@@ -21,6 +21,7 @@ export class AuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest<Request & { user?: JwtPayload }>();
     const [type, token] = request.headers.authorization?.split(' ') ?? [];
+    //separo bearer
     if (type !== 'Bearer' || !token || this.authService.isRevoked(token)) {
       throw new UnauthorizedException();
     }
