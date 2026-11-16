@@ -18,7 +18,7 @@
     }
   </header>
   <a [routerLink]="['/post', post.id]">
-    <img class="photo" [src]="post.imageUrl" [alt]="post.title">
+    <img #photo class="photo" [src]="post.imageUrl" [alt]="post.title">
   </a>
   <p #description class="description" [class.clamped]="!expanded()">{{ post.description }}</p>
   @if (isLong() && !expanded()) {
@@ -29,6 +29,9 @@
       <mat-icon>{{ liked() ? 'favorite' : 'favorite_border' }}</mat-icon> {{ likesCount() }}
     </button>
     <span><mat-icon>chat_bubble_outline</mat-icon> {{ post.commentsCount }}</span>
+    <button type="button" class="fullscreen" (click)="openFullscreen()">
+      <mat-icon>fullscreen</mat-icon>
+    </button>
     @if (isOwner()) {
       <button type="button" class="delete" (click)="deletePost()">
         <mat-icon>delete</mat-icon>

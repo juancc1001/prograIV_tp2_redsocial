@@ -2,10 +2,11 @@ import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { MatIconModule } from '@angular/material/icon';
-import { EMPTY, catchError, switchMap } from 'rxjs';
+import { EMPTY, catchError, switchMap, finalize } from 'rxjs';
 import { UsersService } from '../../core/services/users.service';
 import { AuthService } from '../../core/services/auth.service';
 import { ErrorService } from '../../core/services/error.service';
+import { LoaderService } from '../../core/services/loader.service';
 import { Post, PostsService } from '../../core/services/posts.service';
 import { PostCardComponent } from '../../core/components/post-card/post-card.component';
 
@@ -22,6 +23,7 @@ export class ProfileComponent {
   protected readonly authService = inject(AuthService);
   private readonly usersService = inject(UsersService);
   private readonly errorService = inject(ErrorService);
+  private readonly loaderService = inject(LoaderService);
   private readonly postsService = inject(PostsService);
   private readonly route = inject(ActivatedRoute);
 
@@ -53,7 +55,10 @@ export class ProfileComponent {
 
   loadPosts(): void {
     // el offset es la cantidad de posts que ya tenemos cargados
-    this.postsService.getUserPosts(this.username, this.posts().length, PER_PAGE).subscribe({
+    this.loaderService.show();
+    this.postsService.getUserPosts(this.username, this.posts().length, PER_PAGE).pipe(
+      finalize(() => this.loaderService.hide())
+    ).subscribe({
       next: posts => {
         this.posts.set([...this.posts(), ...posts]);
         this.hasMore.set(posts.length === PER_PAGE);

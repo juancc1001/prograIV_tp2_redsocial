@@ -5,6 +5,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../../core/services/auth.service';
 import { PostsService } from '../../core/services/posts.service';
 import { ErrorService } from '../../core/services/error.service';
+import { LoaderService } from '../../core/services/loader.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-new-post',
@@ -17,6 +19,7 @@ export class NewPostComponent {
   private readonly authService = inject(AuthService);
   private readonly postsService = inject(PostsService);
   private readonly errorService = inject(ErrorService);
+  private readonly loaderService = inject(LoaderService);
   private readonly router = inject(Router);
 
   files = signal<File[]>([]);
@@ -78,7 +81,10 @@ export class NewPostComponent {
       formData.append('files', file);
     }
 
-    this.postsService.createPost(formData).subscribe({
+    this.loaderService.show();
+    this.postsService.createPost(formData).pipe(
+      finalize(() => this.loaderService.hide())
+    ).subscribe({
       next: () => this.router.navigate(['/', this.authService.username()]),
       error: error => this.errorService.show(error),
     });

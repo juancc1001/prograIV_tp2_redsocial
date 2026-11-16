@@ -5,6 +5,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { AuthLayoutComponent } from '../../core/components/auth-layout/auth-layout.component';
 import { AuthService, LoginData } from '../../core/services/auth.service';
 import { ErrorService } from '../../core/services/error.service';
+import { LoaderService } from '../../core/services/loader.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -16,6 +18,7 @@ import { ErrorService } from '../../core/services/error.service';
 export class LoginComponent {
   private readonly authService = inject(AuthService);
   private readonly errorService = inject(ErrorService);
+  private readonly loaderService = inject(LoaderService);
   private readonly router = inject(Router);
 
   showPassword = signal(false);
@@ -26,7 +29,10 @@ export class LoginComponent {
   });
 
   onSubmit(): void {
-    this.authService.login(this.form.value as LoginData).subscribe({
+    this.loaderService.show();
+    this.authService.login(this.form.value as LoginData).pipe(
+      finalize(() => this.loaderService.hide())
+    ).subscribe({
       next: () => this.router.navigate(['/']),
       error: error => this.errorService.show(error),
     });

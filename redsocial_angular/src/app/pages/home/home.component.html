@@ -1,7 +1,11 @@
 <main class="feed">
-  <button type="button" class="sort" (click)="toggleSort()">
-    <mat-icon>sort</mat-icon> {{ sortByLikes() ? 'Más gustados' : 'Más recientes' }}
-  </button>
+  <label class="sort">
+    <mat-icon>sort</mat-icon>
+    <select #sortSelect (change)="changeSort(sortSelect.value)">
+      <option value="recent">Más recientes</option>
+      <option value="likes">Más gustados</option>
+    </select>
+  </label>
   @for (post of posts(); track post.id) {
     <app-post-card [post]="post" (deleted)="removePost($event)" />
   }

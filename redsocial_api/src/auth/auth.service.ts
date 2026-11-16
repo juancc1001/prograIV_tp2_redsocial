@@ -71,8 +71,9 @@ export class AuthService {
     return this.revokedTokens.has(token);
   }
 
+  //campos de jwt payload
   private async createToken(user: UserDocument) {
-    const accessToken = await this.jwtService.signAsync({ sub: user.id, username: user.username });
+    const accessToken = await this.jwtService.signAsync({ sub: user.id, username: user.username, role: user.role });
     return { accessToken };
   }
 }

@@ -1,6 +1,12 @@
 @if (showNavbar()) {
   <app-navbar />
 }
+
+@if (checkingGuards() || loaderService.loading()) {
+  <div class="guard-loader">
+    <app-loader />
+  </div>
+}
 <router-outlet></router-outlet>
 <app-error-snackbar />
 <app-session-modal />

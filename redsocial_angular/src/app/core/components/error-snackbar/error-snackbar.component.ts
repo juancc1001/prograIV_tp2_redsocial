@@ -7,6 +7,7 @@ import { ErrorService } from '../../services/error.service';
   templateUrl: './error-snackbar.component.html',
   styleUrl: './error-snackbar.component.scss'
 })
+//Error snackbar hace if errorMessage
 export class ErrorSnackbarComponent {
   protected readonly errorService = inject(ErrorService);
 }

@@ -2,10 +2,12 @@ import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { AuthService } from './auth.service.js';
+import { Role } from '../users/schemas/user.schema.js';
 
 export interface JwtPayload {
   sub: string;
   username: string;
+  role: Role;
 }
 
 @Injectable()

@@ -5,6 +5,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { Post, PostsService } from '../../services/posts.service';
 import { AuthService } from '../../services/auth.service';
 import { ErrorService } from '../../services/error.service';
+import { LoaderService } from '../../services/loader.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-post-card',
@@ -17,10 +19,12 @@ export class PostCardComponent implements OnInit, AfterViewInit {
   private readonly postsService = inject(PostsService);
   private readonly authService = inject(AuthService);
   private readonly errorService = inject(ErrorService);
+  private readonly loaderService = inject(LoaderService);
 
   @Input({ required: true }) post!: Post;
   @Output() deleted = new EventEmitter<string>();
   @ViewChild('description') description!: ElementRef<HTMLParagraphElement>;
+  @ViewChild('photo') photo!: ElementRef<HTMLImageElement>;
 
   expanded = signal(false);
   isLong = signal(false);
@@ -44,7 +48,10 @@ export class PostCardComponent implements OnInit, AfterViewInit {
 
   toggleLike(): void {
     const request = this.liked() ? this.postsService.unlike(this.post.id) : this.postsService.like(this.post.id);
-    request.subscribe({
+    this.loaderService.show();
+    request.pipe(
+      finalize(() => this.loaderService.hide())
+    ).subscribe({
       next: response => {
         this.liked.set(!this.liked());
         this.likesCount.set(response.likesCount);
@@ -53,8 +60,15 @@ export class PostCardComponent implements OnInit, AfterViewInit {
     });
   }
 
+  openFullscreen(): void {
+    this.photo.nativeElement.requestFullscreen();
+  }
+
   deletePost(): void {
-    this.postsService.deletePost(this.post.id).subscribe({
+    this.loaderService.show();
+    this.postsService.deletePost(this.post.id).pipe(
+      finalize(() => this.loaderService.hide())
+    ).subscribe({
       next: () => this.deleted.emit(this.post.id),
       error: error => this.errorService.show(error),
     });

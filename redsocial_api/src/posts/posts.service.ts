@@ -2,7 +2,7 @@ import { ConflictException, ForbiddenException, Injectable, NotFoundException } 
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, PipelineStage, Types, isValidObjectId } from 'mongoose';
 import { Media, MediaType, Post } from './schemas/post.schema.js';
-import { User } from '../users/schemas/user.schema.js';
+import { Role, User } from '../users/schemas/user.schema.js';
 import { FileService } from '../file/file.service.js';
 import { CreatePostDto } from './dto/create-post.dto.js';
 import { UpdatePostDto } from './dto/update-post.dto.js';
@@ -25,8 +25,8 @@ export class PostsService {
     private readonly fileService: FileService,
   ) {}
 
-  getPosts(pagination: Pagination) {
-    return this.listPosts({}, pagination);
+  getPosts(pagination: Pagination, sort: Record<string, 1 | -1>) {
+    return this.listPosts({}, pagination, sort);
   }
 
   async getFeed(userId: string) {
@@ -37,12 +37,12 @@ export class PostsService {
     return this.listPosts({ author: { $in: user.following } });
   }
 
-  async getUserPosts(username: string, pagination: Pagination) {
+  async getUserPosts(username: string, pagination: Pagination, sort: Record<string, 1 | -1>) {
     const user = await this.userModel.findOne({ username });
     if (!user) {
       throw new NotFoundException('Usuario no encontrado');
     }
-    return this.listPosts({ author: user._id }, pagination);
+    return this.listPosts({ author: user._id }, pagination, sort);
   }
 
   async findOne(id: string) {
@@ -86,8 +86,15 @@ export class PostsService {
     return this.findOne(id);
   }
 
-  async remove(userId: string, id: string) {
-    const post = await this.findOwnPost(userId, id);
+  async remove(userId: string, role: Role, id: string) {
+    this.checkId(id);
+    const post = await this.postModel.findOne({ _id: id, deleted: { $ne: true } });
+    if (!post) {
+      throw new NotFoundException('Publicación no encontrada');
+    }
+    if (!post.author.equals(userId) && role !== Role.Admin) {
+      throw new ForbiddenException('Solo el autor o un administrador puede eliminar la publicación');
+    }
     // baja lógica: el documento queda en la base marcado como borrado
     post.deleted = true;
     await post.save();
@@ -182,12 +189,7 @@ export class PostsService {
 
   // listados con el formato de la card, sin comentarios, solo la cantidad
   //Record<string, unknown> diccionario de filtros para mongo
-  private listPosts(match: Record<string, unknown>, pagination?: Pagination) {
-    let sort: Record<string, 1 | -1> = { createdAt: -1 };
-    if (pagination) {
-      sort = pagination.sort;
-    }
-
+  private listPosts(match: Record<string, unknown>, pagination?: Pagination, sort: Record<string, 1 | -1> = { createdAt: -1 }) {
     // $ne: true también incluye los posts viejos que no tienen el campo
     // likesCount se calcula antes del $sort para poder ordenar por él
     const pipeline: PipelineStage[] = [

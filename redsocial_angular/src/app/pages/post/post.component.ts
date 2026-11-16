@@ -6,6 +6,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { Post, PostComment, PostsService } from '../../core/services/posts.service';
 import { AuthService } from '../../core/services/auth.service';
 import { ErrorService } from '../../core/services/error.service';
+import { LoaderService } from '../../core/services/loader.service';
+import { finalize } from 'rxjs';
 
 const COMMENTS_LIMIT = 5;
 
@@ -20,6 +22,7 @@ export class PostComponent {
   protected readonly authService = inject(AuthService);
   private readonly postsService = inject(PostsService);
   private readonly errorService = inject(ErrorService);
+  private readonly loaderService = inject(LoaderService);
   private readonly route = inject(ActivatedRoute);
 
   private readonly postId = this.route.snapshot.paramMap.get('id')!;
@@ -48,7 +51,10 @@ export class PostComponent {
 
   loadComments(): void {
     // el offset es la cantidad de comentarios que ya tenemos cargados
-    this.postsService.getComments(this.postId, this.comments().length, COMMENTS_LIMIT).subscribe({
+    this.loaderService.show();
+    this.postsService.getComments(this.postId, this.comments().length, COMMENTS_LIMIT).pipe(
+      finalize(() => this.loaderService.hide())
+    ).subscribe({
       next: comments => {
         this.comments.set([...this.comments(), ...comments]);
         this.hasMore.set(comments.length === COMMENTS_LIMIT);
@@ -63,7 +69,10 @@ export class PostComponent {
       return;
     }
 
-    this.postsService.addComment(this.postId, text).subscribe({
+    this.loaderService.show();
+    this.postsService.addComment(this.postId, text).pipe(
+      finalize(() => this.loaderService.hide())
+    ).subscribe({
       next: comment => {
         // el más nuevo va primero
         this.comments.set([comment, ...this.comments()]);
@@ -92,7 +101,10 @@ export class PostComponent {
       return;
     }
 
-    this.postsService.editComment(this.postId, comment.id, text).subscribe({
+    this.loaderService.show();
+    this.postsService.editComment(this.postId, comment.id, text).pipe(
+      finalize(() => this.loaderService.hide())
+    ).subscribe({
       next: updated => {
         // se reemplaza el comentario editado y el resto queda igual
         const comments = this.comments().map(item => {

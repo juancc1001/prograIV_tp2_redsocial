@@ -92,7 +92,7 @@ export class AuthService {
     this.scheduleExpiration(token);
   }
 
-  private clearSession(): void {
+  clearSession(): void {
     clearTimeout(this.warningTimer);
     clearTimeout(this.expireTimer);
     localStorage.removeItem('token');

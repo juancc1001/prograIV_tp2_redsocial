@@ -5,6 +5,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../../core/services/auth.service';
 import { UsersService } from '../../core/services/users.service';
 import { ErrorService } from '../../core/services/error.service';
+import { LoaderService } from '../../core/services/loader.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-edit-profile',
@@ -17,6 +19,7 @@ export class EditProfileComponent {
   private readonly authService = inject(AuthService);
   private readonly usersService = inject(UsersService);
   private readonly errorService = inject(ErrorService);
+  private readonly loaderService = inject(LoaderService);
   private readonly router = inject(Router);
 
   picture = signal<File | null>(null);
@@ -64,7 +67,10 @@ export class EditProfileComponent {
       formData.append('picture', picture);
     }
 
-    this.usersService.updateProfile(formData).subscribe({
+    this.loaderService.show();
+    this.usersService.updateProfile(formData).pipe(
+      finalize(() => this.loaderService.hide())
+    ).subscribe({
       next: () => this.router.navigate(['/', this.authService.username()]),
       error: error => this.errorService.show(error),
     });

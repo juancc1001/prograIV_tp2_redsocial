@@ -6,6 +6,7 @@ import { UpdatePostDto } from './dto/update-post.dto.js';
 import { CreateCommentDto } from './dto/create-comment.dto.js';
 import { PaginationPipe } from '../common/pagination.pipe.js';
 import type { Pagination } from '../common/pagination.pipe.js';
+import { PostSortingPipe } from './post-sorting.pipe.js';
 import { AuthGuard } from '../auth/auth.guard.js';
 import type { JwtPayload } from '../auth/auth.guard.js';
 import { CurrentUser } from '../auth/current-user.decorator.js';
@@ -18,8 +19,12 @@ export class PostsController {
   //@query obtiene los elementos de la query como clave valor 
   //pipe transforma a tipo Pagination y valida los datos
   @UseGuards(AuthGuard)
-  getPosts(@Query(PaginationPipe) pagination: Pagination) {
-    return this.postsService.getPosts(pagination);
+  getPosts(
+    @Query(PaginationPipe) pagination: Pagination,
+    // formato "campo:asc|desc" separado por comas, ej: "likesCount:desc,createdAt:desc"
+    @Query('sort', PostSortingPipe) sort: Record<string, 1 | -1>,
+  ) {
+    return this.postsService.getPosts(pagination, sort);
   }
 
   @Get('feed')
@@ -29,8 +34,12 @@ export class PostsController {
   }
 
   @Get('user/:username')
-  getUserPosts(@Param('username') username: string, @Query(PaginationPipe) pagination: Pagination) {
-    return this.postsService.getUserPosts(username, pagination);
+  getUserPosts(
+    @Param('username') username: string,
+    @Query(PaginationPipe) pagination: Pagination,
+    @Query('sort', PostSortingPipe) sort: Record<string, 1 | -1>,
+  ) {
+    return this.postsService.getUserPosts(username, pagination, sort);
   }
 
   @Get(':id')
@@ -54,7 +63,7 @@ export class PostsController {
   @Delete(':id')
   @UseGuards(AuthGuard)
   remove(@CurrentUser() user: JwtPayload, @Param('id') id: string) {
-    return this.postsService.remove(user.sub, id);
+    return this.postsService.remove(user.sub, user.role, id);
   }
 
   @Post(':id/like')

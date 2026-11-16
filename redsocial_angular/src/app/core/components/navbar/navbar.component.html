@@ -28,6 +28,12 @@
         </div>
       }
     </div>
-    <a class="avatar" [routerLink]="authService.username() ? ['/', authService.username()] : '/login'"><mat-icon>person</mat-icon></a>
+    <a class="avatar" [routerLink]="authService.username() ? ['/', authService.username()] : '/login'">
+      @if (profile()?.profilePictureUrl) {
+        <img [src]="profile()?.profilePictureUrl">
+      } @else {
+        <mat-icon>person</mat-icon>
+      }
+    </a>
   </div>
 </header>
