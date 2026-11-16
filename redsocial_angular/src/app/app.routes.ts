@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
+import { adminGuard } from './core/guards/admin.guard';
 
 export const routes: Routes = [
   { path: '', canActivate: [authGuard], loadComponent: () => import('./pages/home/home.component').then(m => m.HomeComponent) },
@@ -10,7 +11,7 @@ export const routes: Routes = [
   { path: 'post/:id', canActivate: [authGuard], loadComponent: () => import('./pages/post/post.component').then(m => m.PostComponent) },
   {
     path: 'dashboards',
-    canActivate: [authGuard],
+    canActivate: [authGuard, adminGuard],
     loadComponent: () => import('./pages/dashboards/dashboards.component').then(m => m.DashboardsComponent),
     children: [
       { path: '', redirectTo: 'users', pathMatch: 'full' },
