@@ -18,9 +18,9 @@
           <td>{{ user.firstName }} {{ user.lastName }}</td>
           <td>{{ user.email }}</td>
           <td>{{ user.role }}</td>
-          <td>{{ user.isActive ? 'Habilitado' : 'Deshabilitado' }}</td>
+          <td>{{ user.isActive ? 'Activado' : 'Desactivado' }}</td>
           <td>
-            <button type="button" (click)="toggleActive(user)">{{ user.isActive ? 'Deshabilitar' : 'Habilitar' }}</button>
+            <button type="button" (click)="toggleActive(user)">{{ user.isActive ? 'Desactivar' : 'Activar' }}</button>
           </td>
         </tr>
       }

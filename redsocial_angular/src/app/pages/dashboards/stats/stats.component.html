@@ -1,0 +1,35 @@
+<main class="stats">
+  <h1>Estadísticas</h1>
+
+  <section>
+    <h2>Publicaciones por usuario</h2>
+    <form class="range" [formGroup]="postsPerUserRange" (ngSubmit)="loadPostsPerUser()">
+      <input type="date" formControlName="from">
+      <input type="date" formControlName="to">
+      <button type="submit">Aplicar</button>
+    </form>
+    <canvas #postsPerUserCanvas></canvas>
+  </section>
+
+  <section>
+    <h2>Comentarios por día</h2>
+    <form class="range" [formGroup]="commentsPerDayRange" (ngSubmit)="loadCommentsPerDay()">
+      <input type="date" formControlName="from">
+      <input type="date" formControlName="to">
+      <button type="submit">Aplicar</button>
+    </form>
+    <canvas #commentsPerDayCanvas></canvas>
+  </section>
+
+  <section>
+    <h2>Comentarios por publicación (top 10)</h2>
+    <form class="range" [formGroup]="commentsPerPostRange" (ngSubmit)="loadCommentsPerPost()">
+      <input type="date" formControlName="from">
+      <input type="date" formControlName="to">
+      <button type="submit">Aplicar</button>
+    </form>
+    <div class="pie">
+      <canvas #commentsPerPostCanvas></canvas>
+    </div>
+  </section>
+</main>

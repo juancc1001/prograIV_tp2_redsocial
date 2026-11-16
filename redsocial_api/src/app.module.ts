@@ -8,6 +8,7 @@ import { PostsModule } from './posts/posts.module.js';
 import { AuthModule } from './auth/auth.module.js';
 import { FileModule } from './file/file.module.js';
 import { ReferencesModule } from './references/references.module.js';
+import { DashboardModule } from './dashboard/dashboard.module.js';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { ReferencesModule } from './references/references.module.js';
     AuthModule,
     FileModule,
     ReferencesModule,
+    DashboardModule,
   ],
   controllers: [AppController],
   providers: [AppService],

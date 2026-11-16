@@ -9,6 +9,7 @@ export interface PostAuthor {
   profilePictureUrl?: string;
 }
 
+//extiende referenceResult que esta en ReferencesService
 export interface PostReference extends ReferenceResult {
   kind: ReferenceKind;
   rating: number;

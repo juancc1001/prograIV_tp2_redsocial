@@ -7,6 +7,7 @@ import { Post, PostComment, PostsService } from '../../core/services/posts.servi
 import { AuthService } from '../../core/services/auth.service';
 import { ErrorService } from '../../core/services/error.service';
 import { LoaderService } from '../../core/services/loader.service';
+import { IsMineDirective } from '../../core/directives/is-mine.directive';
 import { finalize } from 'rxjs';
 
 const COMMENTS_LIMIT = 5;
@@ -14,7 +15,7 @@ const COMMENTS_LIMIT = 5;
 @Component({
   selector: 'app-post',
   standalone: true,
-  imports: [DatePipe, ReactiveFormsModule, RouterLink, MatIconModule],
+  imports: [DatePipe, ReactiveFormsModule, RouterLink, MatIconModule, IsMineDirective],
   templateUrl: './post.component.html',
   styleUrl: './post.component.scss'
 })

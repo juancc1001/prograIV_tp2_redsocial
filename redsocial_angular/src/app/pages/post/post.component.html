@@ -44,11 +44,9 @@
           }
           @if (canDelete(comment) && editingId() !== comment.id) {
             <div class="actions">
-              @if (isMine(comment)) {
-                <button type="button" class="icon" (click)="startEdit(comment)">
-                  <mat-icon>edit</mat-icon>
-                </button>
-              }
+              <button *appIsMine="comment.author.username" type="button" class="icon" (click)="startEdit(comment)">
+                <mat-icon>edit</mat-icon>
+              </button>
               <button type="button" class="icon" (click)="deleteComment(comment)">
                 <mat-icon>delete</mat-icon>
               </button>

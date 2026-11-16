@@ -16,6 +16,7 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'users', pathMatch: 'full' },
       { path: 'users', loadComponent: () => import('./pages/dashboards/users/users.component').then(m => m.UsersComponent) },
+      { path: 'stats', loadComponent: () => import('./pages/dashboards/stats/stats.component').then(m => m.StatsComponent) },
     ],
   },
   { path: ':username', canActivate: [authGuard], loadComponent: () => import('./pages/profile/profile.component').then(m => m.ProfileComponent) },

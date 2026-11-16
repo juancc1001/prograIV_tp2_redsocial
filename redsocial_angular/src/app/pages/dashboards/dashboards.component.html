@@ -1,5 +1,6 @@
 <nav class="sub-navbar">
   <a routerLink="users" routerLinkActive="active">Usuarios</a>
+  <a routerLink="stats" routerLinkActive="active">Estadísticas</a>
   <button type="button" class="create" (click)="modalOpen.set(true)">Crear usuario</button>
 </nav>
 <router-outlet (activate)="onActivate($event)"></router-outlet>
