@@ -1,0 +1,29 @@
+.users {
+  width: 60%;
+  margin: 0 auto;
+  padding: var(--space-5) 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: var(--space-2) var(--space-3);
+  text-align: left;
+  border-bottom: 2px solid var(--color-border);
+}
+
+th {
+  color: var(--color-text-muted);
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}

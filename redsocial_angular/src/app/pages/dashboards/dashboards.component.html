@@ -1,0 +1,8 @@
+<nav class="sub-navbar">
+  <a routerLink="users" routerLinkActive="active">Usuarios</a>
+  <button type="button" class="create" (click)="modalOpen.set(true)">Crear usuario</button>
+</nav>
+<router-outlet (activate)="onActivate($event)"></router-outlet>
+@if (modalOpen()) {
+  <app-create-user-modal (closed)="modalOpen.set(false)" (created)="onCreated()" />
+}

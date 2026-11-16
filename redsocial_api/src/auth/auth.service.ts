@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { ConflictException, ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { JwtService } from '@nestjs/jwt';
 import { PasswordHasher } from '@nestjs/authentication';
@@ -47,6 +47,9 @@ export class AuthService {
     const validPassword = await this.passwordHasher.verify(dto.password, user?.passwordHash);
     if (!user || !validPassword) {
       throw new UnauthorizedException('Usuario o contraseña incorrectos');
+    }
+    if (!user.isActive) {
+      throw new ForbiddenException('Tu usuario está deshabilitado');
     }
 
     return this.createToken(user);

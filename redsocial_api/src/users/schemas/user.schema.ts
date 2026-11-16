@@ -39,6 +39,10 @@ export class User {
 
   @Prop({ enum: Role, default: Role.User })
   role: Role;
+
+  // los usuarios viejos no tienen el campo, mongoose les aplica el default al leerlos
+  @Prop({ default: true })
+  isActive: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

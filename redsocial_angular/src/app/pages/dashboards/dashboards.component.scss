@@ -1,0 +1,24 @@
+.sub-navbar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 48px;
+  border-bottom: 2px solid var(--color-border);
+
+  a {
+    padding: 8px 16px;
+    border-radius: 999px;
+    color: var(--color-text);
+  }
+
+  a.active {
+    color: var(--color-bg);
+    background: var(--color-primary);
+  }
+}
+
+.create {
+  margin-left: auto;
+  padding: 0 var(--space-4);
+  font-weight: 800;
+}

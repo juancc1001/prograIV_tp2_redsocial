@@ -1,0 +1,34 @@
+<main class="users">
+  <h1>Usuarios</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Usuario</th>
+        <th>Nombre</th>
+        <th>Email</th>
+        <th>Rol</th>
+        <th>Estado</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (user of users(); track user.username) {
+        <tr>
+          <td><a [routerLink]="['/', user.username]">{{ user.username }}</a></td>
+          <td>{{ user.firstName }} {{ user.lastName }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.role }}</td>
+          <td>{{ user.isActive ? 'Habilitado' : 'Deshabilitado' }}</td>
+          <td>
+            <button type="button" (click)="toggleActive(user)">{{ user.isActive ? 'Deshabilitar' : 'Habilitar' }}</button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+  <div class="pagination">
+    <button type="button" [disabled]="page() === 0" (click)="previousPage()">&lt;</button>
+    <span>Página {{ page() + 1 }}</span>
+    <button type="button" [disabled]="!hasMore()" (click)="nextPage()">&gt;</button>
+  </div>
+</main>
