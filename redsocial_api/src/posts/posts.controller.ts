@@ -26,6 +26,7 @@ export class PostsController {
     return this.postsService.getPosts(pagination, sort);
   }
 
+  //al final no lo usé
   @Get('feed')
   @UseGuards(AuthGuard)
   getFeed(@CurrentUser() user: JwtPayload) {

@@ -83,6 +83,14 @@ export class AuthService {
     return this.revokedTokens.has(token);
   }
 
+  async isActive(userId: string) {
+    const user = await this.userModel.findById(userId);
+    if (!user) {
+      return false;
+    }
+    return user.isActive;
+  }
+
   //campos de jwt payload
   private async createToken(user: UserDocument) {
     const accessToken = await this.jwtService.signAsync({ sub: user.id, username: user.username, role: user.role });

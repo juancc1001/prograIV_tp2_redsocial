@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
+import { CanActivate, ExecutionContext, ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { AuthService } from './auth.service.js';
@@ -30,6 +30,12 @@ export class AuthGuard implements CanActivate {
       request.user = await this.jwtService.verifyAsync<JwtPayload>(token);
     } catch {
       throw new UnauthorizedException();
+    }
+
+    // si esta desactivado tampoco está autorizado
+    const active = await this.authService.isActive(request.user.sub);
+    if (!active) {
+      throw new ForbiddenException('Tu usuario está desactivado');
     }
     return true;
   }
