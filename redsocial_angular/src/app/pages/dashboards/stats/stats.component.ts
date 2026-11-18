@@ -55,7 +55,15 @@ export class StatsComponent implements AfterViewInit, OnDestroy {
     });
     this.commentsPerPostChart = new Chart(this.commentsPerPostCanvas.nativeElement, {
       type: 'pie',
-      data: { labels: [], datasets: [{ label: 'Comentarios', data: [] }] },
+      data: {
+        labels: [],
+        datasets: [{
+          label: 'Comentarios',
+          data: [],
+          // colores explícitos: el plugin automático no los asigna si el gráfico arranca vacío
+          backgroundColor: ['#36a2eb', '#ff6384', '#ff9f40', '#ffcd56', '#4bc0c0', '#9966ff', '#c9cbcf'],
+        }],
+      },
     });
 
     this.loadPostsPerUser();
