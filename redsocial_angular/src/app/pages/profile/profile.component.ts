@@ -59,7 +59,8 @@ export class ProfileComponent {
     });
   }
 
-  removePost(id: string): void {
-    this.posts.set(this.posts().filter(post => post.id !== id));
+  // se vuelven a pedir para completar las últimas 3
+  removePost(): void {
+    this.loadPosts(this.route.snapshot.paramMap.get('username')!);
   }
 }

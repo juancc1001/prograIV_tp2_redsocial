@@ -31,7 +31,7 @@
 
     <section class="posts">
       @for (post of posts(); track post.id) {
-        <app-post-card [post]="post" [compact]="true" (deleted)="removePost($event)" />
+        <app-post-card [post]="post" [compact]="true" (deleted)="removePost()" />
       }
     </section>
   }

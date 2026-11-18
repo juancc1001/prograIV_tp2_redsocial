@@ -30,7 +30,7 @@ interface TokenPayload {
 }
 
 // cuánto antes del vencimiento se avisa
-const WARNING_TIME = 10000;
+const WARNING_TIME = 30000;
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
