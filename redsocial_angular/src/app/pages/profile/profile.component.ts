@@ -10,7 +10,7 @@ import { LoaderService } from '../../core/services/loader.service';
 import { Post, PostsService } from '../../core/services/posts.service';
 import { PostCardComponent } from '../../core/components/post-card/post-card.component';
 
-const PER_PAGE = 3;
+const LAST_POSTS = 3;
 
 @Component({
   selector: 'app-profile',
@@ -27,8 +27,6 @@ export class ProfileComponent {
   private readonly postsService = inject(PostsService);
   private readonly route = inject(ActivatedRoute);
 
-  readonly activeTab = signal<'rollo' | 'muro'>('rollo');
-
   readonly profile = toSignal(
     this.route.paramMap.pipe(
       switchMap(params => this.usersService.getProfile(params.get('username')!).pipe(
@@ -41,28 +39,22 @@ export class ProfileComponent {
   );
 
   posts = signal<Post[]>([]);
-  hasMore = signal(false);
-  private username = '';
 
   constructor() {
-    // al cambiar de perfil se arranca de nuevo desde el principio
+    // al cambiar de perfil se vuelven a pedir los posts
     this.route.paramMap.pipe(takeUntilDestroyed()).subscribe(params => {
-      this.username = params.get('username')!;
       this.posts.set([]);
-      this.loadPosts();
+      this.loadPosts(params.get('username')!);
     });
   }
 
-  loadPosts(): void {
-    // el offset es la cantidad de posts que ya tenemos cargados
+  // solo los últimos posts, sin paginar
+  private loadPosts(username: string): void {
     this.loaderService.show();
-    this.postsService.getUserPosts(this.username, this.posts().length, PER_PAGE).pipe(
+    this.postsService.getUserPosts(username, 0, LAST_POSTS).pipe(
       finalize(() => this.loaderService.hide())
     ).subscribe({
-      next: posts => {
-        this.posts.set([...this.posts(), ...posts]);
-        this.hasMore.set(posts.length === PER_PAGE);
-      },
+      next: posts => this.posts.set(posts),
       error: error => this.errorService.show(error),
     });
   }

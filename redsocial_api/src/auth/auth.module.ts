@@ -15,7 +15,7 @@ import { User, UserSchema } from '../users/schemas/user.schema.js';
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
         secret: config.getOrThrow<string>('JWT_SECRET'),
-        signOptions: { expiresIn: '60s' },
+        signOptions: { expiresIn: '90s' },
       }),
     }),
   ],

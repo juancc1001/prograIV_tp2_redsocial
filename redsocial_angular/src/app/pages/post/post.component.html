@@ -19,7 +19,9 @@
       @if (post.title) {
         <h1 class="title">{{ post.title }}</h1>
       }
-      <img class="photo" [src]="post.imageUrl" [alt]="post.title">
+      @if (post.imageUrl) {
+        <img class="photo" [src]="post.imageUrl" [alt]="post.title">
+      }
       @if (post.description) {
         <p class="description">{{ post.description }}</p>
       }

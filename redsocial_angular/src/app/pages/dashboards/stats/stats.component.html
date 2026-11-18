@@ -2,7 +2,7 @@
   <h1>Estadísticas</h1>
 
   <section>
-    <h2>Publicaciones por usuario</h2>
+    <h2>Reseñas por usuario</h2>
     <form class="range" [formGroup]="postsPerUserRange" (ngSubmit)="loadPostsPerUser()">
       <input type="date" formControlName="from">
       <input type="date" formControlName="to">
@@ -22,7 +22,7 @@
   </section>
 
   <section>
-    <h2>Comentarios por publicación (top 10)</h2>
+    <h2>Comentarios por reseña (top 10)</h2>
     <form class="range" [formGroup]="commentsPerPostRange" (ngSubmit)="loadCommentsPerPost()">
       <input type="date" formControlName="from">
       <input type="date" formControlName="to">

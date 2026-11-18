@@ -15,7 +15,7 @@
           <p>{{ profile.bio }}</p>
         }
         <div class="stats">
-          <span><strong>{{ profile.postsCount }}</strong> posts</span>
+          <span><strong>{{ profile.postsCount }}</strong> reseñas</span>
           <span><strong>{{ profile.followersCount }}</strong> seguidores</span>
           <span><strong>{{ profile.followingCount }}</strong> siguiendo</span>
         </div>
@@ -26,19 +26,13 @@
     </section>
 
     <nav class="tabs">
-      <button type="button" class="tab" [class.active]="activeTab() === 'rollo'" (click)="activeTab.set('rollo')">Rollo</button>
-      <button type="button" class="tab" [class.active]="activeTab() === 'muro'" (click)="activeTab.set('muro')">Muro</button>
+      <button type="button" class="tab active">Diario</button>
     </nav>
 
-    @if (activeTab() === 'rollo') {
-      <section class="posts">
-        @for (post of posts(); track post.id) {
-          <app-post-card [post]="post" (deleted)="removePost($event)" />
-        }
-        @if (hasMore()) {
-          <button type="button" class="more" (click)="loadPosts()">Cargar más</button>
-        }
-      </section>
-    }
+    <section class="posts">
+      @for (post of posts(); track post.id) {
+        <app-post-card [post]="post" [compact]="true" (deleted)="removePost($event)" />
+      }
+    </section>
   }
 </main>

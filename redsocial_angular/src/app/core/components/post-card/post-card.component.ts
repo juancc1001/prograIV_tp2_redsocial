@@ -27,6 +27,8 @@ export class PostCardComponent implements OnInit, AfterViewInit {
   private readonly loaderService = inject(LoaderService);
 
   @Input({ required: true }) post!: Post;
+  // versión chica para el perfil: manda la reseña y la foto va en miniatura
+  @Input() compact = false;
   @Output() deleted = new EventEmitter<string>();
   @ViewChild('description') description!: ElementRef<HTMLParagraphElement>;
 

@@ -81,14 +81,13 @@
 }
 
 .posts {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-5);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
   margin-top: var(--space-4);
-}
 
-.more {
-  align-self: center;
-  padding: 0 var(--space-5);
-  font-weight: 800;
+  // la card agrandada ocupa toda la fila
+  app-post-card:has(.filled) {
+    grid-column: 1 / -1;
+  }
 }

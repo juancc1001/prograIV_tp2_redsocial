@@ -1,4 +1,4 @@
-<article class="card" [class.filled]="filled()">
+<article class="card" [class.filled]="filled()" [class.compact]="compact && !filled()">
   <div class="content">
     <header class="header">
       <div>
@@ -34,11 +34,14 @@
         </div>
       </div>
     </div>
-    <a [routerLink]="['/post', post.id]">
-      <img class="photo" [src]="post.imageUrl" [alt]="post.title">
-    </a>
+    @if (post.imageUrl) {
+      <a [routerLink]="['/post', post.id]">
+        <img class="photo" [src]="post.imageUrl" [alt]="post.title">
+      </a>
+    }
     <p #description class="description" [class.clamped]="!expanded()">{{ post.description }}</p>
-    @if (isLong() && !expanded()) {
+    <!-- en la card chica el texto queda cortado -->
+    @if (isLong() && !expanded() && !compact) {
       <button type="button" class="more" (click)="expanded.set(true)">ver más...</button>
     }
     <div class="stats">

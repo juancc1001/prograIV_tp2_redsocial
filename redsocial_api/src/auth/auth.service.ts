@@ -59,7 +59,7 @@ export class AuthService {
   async authorize(userId: string) {
     const user = await this.userModel.findById(userId).select('-passwordHash');
     if (!user) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('No autorizado');
     }
     return user;
   }
@@ -68,7 +68,7 @@ export class AuthService {
   async refresh(userId: string, oldToken: string) {
     const user = await this.userModel.findById(userId);
     if (!user) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('No autorizado');
     }
     this.revokedTokens.add(oldToken);
     return this.createToken(user);

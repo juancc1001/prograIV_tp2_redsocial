@@ -1,6 +1,6 @@
 <main class="new-post">
-  <p class="eyebrow">Nuevo cuadro</p>
-  <h1 class="heading">Revelá el cuadro de hoy.</h1>
+  <p class="eyebrow">Nueva reseña</p>
+  <h1 class="heading">¿Qué leíste, jugaste o miraste?</h1>
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="preview">
@@ -39,25 +39,25 @@
       @if (type() === 'ALBUM') {
         <label class="field">
           <span class="label">Título</span>
-          <input type="text" placeholder="Ponele nombre al álbum." formControlName="title">
+          <input type="text" placeholder="Ponele título a tu reseña." formControlName="title">
         </label>
       }
 
       <label class="field description">
-        <span class="label">Epígrafe</span>
-        <textarea placeholder="Contá qué hiciste hoy." formControlName="description"></textarea>
+        <span class="label">Reseña</span>
+        <textarea placeholder="Contá qué te pareció." formControlName="description"></textarea>
       </label>
 
       <label class="field">
-        <span class="label">¿Dónde fue?</span>
+        <span class="label">¿Dónde lo viste/jugaste?</span>
         <div class="location">
           <mat-icon>location_on</mat-icon>
-          <input type="text" placeholder="Costanera Sur, Buenos Aires" formControlName="location">
+          <input type="text" placeholder="Cine, Netflix, PS5…" formControlName="location">
         </div>
       </label>
 
       <div class="field">
-        <span class="label">Referencia</span>
+        <span class="label">¿Qué reseñás?</span>
         <div class="kinds">
           @for (kind of kinds; track kind.value) {
             <button type="button" class="kind" [class.active]="referenceKind() === kind.value" (click)="toggleKind(kind.value)">
@@ -110,7 +110,7 @@
         }
       </div>
 
-      <button type="submit" class="submit" [disabled]="files().length === 0 || referenceIncomplete()">Publicar</button>
+      <button type="submit" class="submit" [disabled]="referenceIncomplete()">Publicar</button>
     </div>
 
     <div class="gallery">

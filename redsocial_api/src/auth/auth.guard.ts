@@ -23,13 +23,14 @@ export class AuthGuard implements CanActivate {
     const [type, token] = request.headers.authorization?.split(' ') ?? [];
     //separo bearer
     if (type !== 'Bearer' || !token || this.authService.isRevoked(token)) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('No autorizado');
     }
 
+    //verifica el jwt
     try {
       request.user = await this.jwtService.verifyAsync<JwtPayload>(token);
     } catch {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('No autorizado');
     }
 
     // si esta desactivado tampoco está autorizado

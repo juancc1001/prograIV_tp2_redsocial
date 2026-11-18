@@ -1,6 +1,6 @@
 .card {
-  // el ancho lo define la foto, el texto se ajusta a ese ancho
-  width: min-content;
+  // ancho de la foto (35vw) más padding y borde, así las reseñas sin foto miden lo mismo
+  width: calc(35vw + 22px);
   margin: 0 auto;
   padding: var(--space-3) 10px;
   background: var(--color-surface);
@@ -175,6 +175,44 @@
     height: 36px;
     padding: 0;
     border-radius: 50%;
+  }
+}
+
+// card chica: ocupa el ancho del perfil, la reseña va antes que la foto y la foto es una miniatura
+.card.compact {
+  width: 100%;
+  // misma altura que las otras cards de la fila
+  height: 100%;
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .description {
+    font-size: 1.1rem;
+  }
+
+  a {
+    order: 1;
+    align-self: flex-start;
+  }
+
+  .stats,
+  .comment-form {
+    order: 2;
+  }
+
+  // los likes quedan abajo de todo
+  .stats {
+    margin-top: auto;
+    padding-top: var(--space-2);
+  }
+
+  .photo {
+    width: 140px;
+    border-radius: 8px;
   }
 }
 
