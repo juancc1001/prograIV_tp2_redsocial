@@ -7,7 +7,7 @@
       </div>
       @if (post.author; as author) {
         <div class="author">
-          <span>{{ author.username }}</span>
+          <span>Reseña de &#64;{{ author.username }}</span>
           <div class="avatar">
             @if (author.profilePictureUrl) {
               <img [src]="author.profilePictureUrl">
@@ -18,9 +18,6 @@
         </div>
       }
     </header>
-    <a [routerLink]="['/post', post.id]">
-      <img class="photo" [src]="post.imageUrl" [alt]="post.title">
-    </a>
     <div *appHasReference="post.reference" class="reference">
       @if (post.reference!.imageUrl) {
         <img [src]="post.reference!.imageUrl" [alt]="post.reference!.title">
@@ -37,6 +34,9 @@
         </div>
       </div>
     </div>
+    <a [routerLink]="['/post', post.id]">
+      <img class="photo" [src]="post.imageUrl" [alt]="post.title">
+    </a>
     <p #description class="description" [class.clamped]="!expanded()">{{ post.description }}</p>
     @if (isLong() && !expanded()) {
       <button type="button" class="more" (click)="expanded.set(true)">ver más...</button>

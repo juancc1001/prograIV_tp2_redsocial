@@ -10,8 +10,15 @@
 .sort {
   display: flex;
   align-items: center;
-  align-self: flex-end;
+  // mismo ancho que la foto de la card, así queda alineado a su borde derecho
+  align-self: center;
+  justify-content: flex-end;
+  width: 35vw;
   gap: var(--space-1);
+
+  select {
+    width: auto;
+  }
 }
 
 .more {

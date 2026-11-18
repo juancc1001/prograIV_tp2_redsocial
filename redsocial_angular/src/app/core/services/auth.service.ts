@@ -1,6 +1,5 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { Observable, finalize, tap } from 'rxjs';
 
@@ -28,11 +27,9 @@ const WARNING_TIME = 5000;
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly http = inject(HttpClient);
-  private readonly router = inject(Router);
   private readonly apiUrl = `${environment.apiUrl}/auth`;
 
   private warningTimer?: ReturnType<typeof setTimeout>;
-  private expireTimer?: ReturnType<typeof setTimeout>;
 
   readonly token = signal<string | null>(localStorage.getItem('token'));
   readonly sessionExpiring = signal(false);
@@ -102,26 +99,20 @@ export class AuthService {
 
   clearSession(): void {
     clearTimeout(this.warningTimer);
-    clearTimeout(this.expireTimer);
     localStorage.removeItem('token');
     this.token.set(null);
     this.sessionExpiring.set(false);
   }
 
-  // un timer abre el aviso y otro cierra la sesión cuando vence el token
+  // abre el aviso antes de que venza el token; el 401 lo maneja el interceptor
   private scheduleExpiration(token: string): void {
     clearTimeout(this.warningTimer);
-    clearTimeout(this.expireTimer);
 
     // exp viene en segundos
     const expiresAt = this.readPayload(token).exp * 1000;
     const timeLeft = expiresAt - Date.now();
 
     this.warningTimer = setTimeout(() => this.sessionExpiring.set(true), timeLeft - WARNING_TIME);
-    this.expireTimer = setTimeout(() => {
-      this.clearSession();
-      this.router.navigate(['/login']);
-    }, timeLeft);
   }
 
   private readPayload(token: string) {
