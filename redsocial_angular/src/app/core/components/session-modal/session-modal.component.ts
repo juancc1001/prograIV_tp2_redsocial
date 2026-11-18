@@ -1,5 +1,4 @@
 import { Component, inject } from '@angular/core';
-import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { ErrorService } from '../../services/error.service';
 import { LoaderService } from '../../services/loader.service';
@@ -15,7 +14,6 @@ export class SessionModalComponent {
   protected readonly authService = inject(AuthService);
   private readonly errorService = inject(ErrorService);
   private readonly loaderService = inject(LoaderService);
-  private readonly router = inject(Router);
 
   renew(): void {
     this.loaderService.show();
@@ -26,13 +24,7 @@ export class SessionModalComponent {
     });
   }
 
-  logout(): void {
-    this.loaderService.show();
-    this.authService.logout().pipe(
-      finalize(() => this.loaderService.hide())
-    ).subscribe({
-      complete: () => this.router.navigate(['/login']),
-      error: () => this.router.navigate(['/login']),
-    });
+  cancel(): void {
+    this.authService.sessionExpiring.set(false);
   }
 }
