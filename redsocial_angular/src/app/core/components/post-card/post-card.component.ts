@@ -8,7 +8,7 @@ import { AuthService } from '../../services/auth.service';
 import { ErrorService } from '../../services/error.service';
 import { LoaderService } from '../../services/loader.service';
 import { IsMineDirective } from '../../directives/is-mine.directive';
-import { HasReferenceDirective } from '../../directives/has-reference.directive';
+import { HasPhotoDirective } from '../../directives/has-photo.directive';
 import { finalize } from 'rxjs';
 
 const COMMENTS_LIMIT = 5;
@@ -16,7 +16,7 @@ const COMMENTS_LIMIT = 5;
 @Component({
   selector: 'app-post-card',
   standalone: true,
-  imports: [DatePipe, MatIconModule, ReactiveFormsModule, RouterLink, IsMineDirective, HasReferenceDirective],
+  imports: [DatePipe, MatIconModule, ReactiveFormsModule, RouterLink, IsMineDirective, HasPhotoDirective],
   templateUrl: './post-card.component.html',
   styleUrl: './post-card.component.scss'
 })

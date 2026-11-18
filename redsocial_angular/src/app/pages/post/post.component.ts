@@ -8,6 +8,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { ErrorService } from '../../core/services/error.service';
 import { LoaderService } from '../../core/services/loader.service';
 import { IsMineDirective } from '../../core/directives/is-mine.directive';
+import { HasPhotoDirective } from '../../core/directives/has-photo.directive';
 import { finalize } from 'rxjs';
 
 const COMMENTS_LIMIT = 5;
@@ -15,7 +16,7 @@ const COMMENTS_LIMIT = 5;
 @Component({
   selector: 'app-post',
   standalone: true,
-  imports: [DatePipe, ReactiveFormsModule, RouterLink, MatIconModule, IsMineDirective],
+  imports: [DatePipe, ReactiveFormsModule, RouterLink, MatIconModule, IsMineDirective, HasPhotoDirective],
   templateUrl: './post.component.html',
   styleUrl: './post.component.scss'
 })

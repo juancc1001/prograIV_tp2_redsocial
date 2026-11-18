@@ -1,21 +1,20 @@
 import { Directive, TemplateRef, ViewContainerRef, effect, inject, input } from '@angular/core';
-import { PostReference } from '../services/posts.service';
 
-// muestra el elemento solo si el post tiene una referencia
+// muestra el elemento solo si el post tiene foto
 @Directive({
-  selector: '[appHasReference]',
+  selector: '[appHasPhoto]',
   standalone: true
 })
-export class HasReferenceDirective {
+export class HasPhotoDirective {
   private readonly templateRef = inject(TemplateRef);
   private readonly viewContainer = inject(ViewContainerRef);
 
-  readonly appHasReference = input<PostReference>();
+  readonly appHasPhoto = input<string>();
 
   constructor() {
     effect(() => {
       this.viewContainer.clear();
-      if (this.appHasReference()) {
+      if (this.appHasPhoto()) {
         this.viewContainer.createEmbeddedView(this.templateRef);
       }
     });

@@ -21,21 +21,25 @@
     @if (filled()) {
       <!-- agrandada: lo reseñado a la izquierda; estrellas, texto y fotos a la derecha -->
       <div class="expanded">
-        <div *appHasReference="post.reference" class="reviewed">
-          @if (post.reference!.imageUrl) {
-            <img [src]="post.reference!.imageUrl" [alt]="post.reference!.title">
-          }
-          <strong>{{ post.reference!.title }}</strong>
-          @if (post.reference!.year) {
-            <span class="year">{{ post.reference!.year }}</span>
-          }
-        </div>
-        <div class="review">
-          <div *appHasReference="post.reference" class="stars">
-            @for (star of stars; track star) {
-              <mat-icon>{{ star <= post.reference!.rating ? 'star' : 'star_border' }}</mat-icon>
+        @if (post.reference; as reference) {
+          <div class="reviewed">
+            @if (reference.imageUrl) {
+              <img [src]="reference.imageUrl" [alt]="reference.title">
+            }
+            <strong>{{ reference.title }}</strong>
+            @if (reference.year) {
+              <span class="year">{{ reference.year }}</span>
             }
           </div>
+        }
+        <div class="review">
+          @if (post.reference; as reference) {
+            <div class="stars">
+              @for (star of stars; track star) {
+                <mat-icon>{{ star <= reference.rating ? 'star' : 'star_border' }}</mat-icon>
+              }
+            </div>
+          }
           <p class="text">{{ post.description }}</p>
           <div class="photos">
             @for (item of post.media; track item.url) {
@@ -49,27 +53,27 @@
         </div>
       </div>
     } @else {
-      <div *appHasReference="post.reference" class="reference">
-        @if (post.reference!.imageUrl) {
-          <img [src]="post.reference!.imageUrl" [alt]="post.reference!.title">
-        }
-        <div class="reference-info">
-          <strong>{{ post.reference!.title }}</strong>
-          @if (post.reference!.year) {
-            <span class="year">{{ post.reference!.year }}</span>
+      @if (post.reference; as reference) {
+        <div class="reference">
+          @if (reference.imageUrl) {
+            <img [src]="reference.imageUrl" [alt]="reference.title">
           }
-          <div class="stars">
-            @for (star of stars; track star) {
-              <mat-icon>{{ star <= post.reference!.rating ? 'star' : 'star_border' }}</mat-icon>
+          <div class="reference-info">
+            <strong>{{ reference.title }}</strong>
+            @if (reference.year) {
+              <span class="year">{{ reference.year }}</span>
             }
+            <div class="stars">
+              @for (star of stars; track star) {
+                <mat-icon>{{ star <= reference.rating ? 'star' : 'star_border' }}</mat-icon>
+              }
+            </div>
           </div>
         </div>
-      </div>
-      @if (post.imageUrl) {
-        <a [routerLink]="['/post', post.id]">
-          <img class="photo" [src]="post.imageUrl" [alt]="post.title">
-        </a>
       }
+      <a *appHasPhoto="post.imageUrl" [routerLink]="['/post', post.id]">
+        <img class="photo" [src]="post.imageUrl" [alt]="post.title">
+      </a>
       <p #description class="description" [class.clamped]="!expanded()">{{ post.description }}</p>
       <!-- en la card chica el texto queda cortado -->
       @if (isLong() && !expanded() && !compact) {

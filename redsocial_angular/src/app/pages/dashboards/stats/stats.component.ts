@@ -44,6 +44,7 @@ export class StatsComponent implements AfterViewInit, OnDestroy {
 
   // los canvas recién existen después de renderizar la vista
   ngAfterViewInit(): void {
+    //Chart agrega el elemento a la sección por ViewChild
     this.postsPerUserChart = new Chart(this.postsPerUserCanvas.nativeElement, {
       type: 'bar',
       data: { labels: [], datasets: [{ label: 'Publicaciones', data: [] }] },
