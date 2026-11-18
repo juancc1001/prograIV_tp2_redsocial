@@ -2,7 +2,6 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
-import { AuthService } from '../../core/services/auth.service';
 import { PostsService } from '../../core/services/posts.service';
 import { ErrorService } from '../../core/services/error.service';
 import { LoaderService } from '../../core/services/loader.service';
@@ -18,7 +17,6 @@ import { catchError, debounceTime, finalize, of, switchMap } from 'rxjs';
   styleUrl: './new-post.component.scss'
 })
 export class NewPostComponent {
-  private readonly authService = inject(AuthService);
   private readonly postsService = inject(PostsService);
   private readonly errorService = inject(ErrorService);
   private readonly loaderService = inject(LoaderService);
@@ -169,7 +167,7 @@ export class NewPostComponent {
     this.postsService.createPost(formData).pipe(
       finalize(() => this.loaderService.hide())
     ).subscribe({
-      next: () => this.router.navigate(['/', this.authService.username()]),
+      next: () => this.router.navigate(['/']),
       error: error => this.errorService.show(error),
     });
   }
