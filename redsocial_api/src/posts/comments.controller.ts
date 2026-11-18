@@ -12,6 +12,7 @@ import { CurrentUser } from '../auth/current-user.decorator.js';
 export class CommentsController {
   constructor(private readonly postsService: PostsService) {}
 
+  //no lo uso
   @Get()
   getComments(@Param('id') id: string, @Query(PaginationPipe) pagination: Pagination) {
     return this.postsService.getComments(id, pagination);

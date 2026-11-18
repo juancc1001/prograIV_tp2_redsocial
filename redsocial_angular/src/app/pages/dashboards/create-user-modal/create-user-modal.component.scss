@@ -12,6 +12,9 @@
   width: 420px;
   max-height: 90vh;
   overflow-y: auto;
+  // scroll finito, sin fondo, igual que el de comentarios
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
   padding: var(--space-5);
   background: var(--color-surface);
   border: 2px solid var(--color-border);

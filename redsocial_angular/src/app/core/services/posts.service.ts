@@ -15,6 +15,11 @@ export interface PostReference extends ReferenceResult {
   rating: number;
 }
 
+export interface PostMedia {
+  type: 'IMAGE' | 'VIDEO';
+  url: string;
+}
+
 export interface Post {
   id: string;
   author?: PostAuthor;
@@ -22,6 +27,7 @@ export interface Post {
   createdAt: string;
   description: string;
   imageUrl: string;
+  media: PostMedia[];
   likes: string[];
   likesCount: number;
   commentsCount: number;

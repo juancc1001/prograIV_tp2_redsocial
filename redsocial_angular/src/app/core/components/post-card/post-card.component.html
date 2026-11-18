@@ -18,31 +18,63 @@
         </div>
       }
     </header>
-    <div *appHasReference="post.reference" class="reference">
-      @if (post.reference!.imageUrl) {
-        <img [src]="post.reference!.imageUrl" [alt]="post.reference!.title">
-      }
-      <div class="reference-info">
-        <strong>{{ post.reference!.title }}</strong>
-        @if (post.reference!.year) {
-          <span class="year">{{ post.reference!.year }}</span>
-        }
-        <div class="stars">
-          @for (star of stars; track star) {
-            <mat-icon>{{ star <= post.reference!.rating ? 'star' : 'star_border' }}</mat-icon>
+    @if (filled()) {
+      <!-- agrandada: lo reseñado a la izquierda; estrellas, texto y fotos a la derecha -->
+      <div class="expanded">
+        <div *appHasReference="post.reference" class="reviewed">
+          @if (post.reference!.imageUrl) {
+            <img [src]="post.reference!.imageUrl" [alt]="post.reference!.title">
+          }
+          <strong>{{ post.reference!.title }}</strong>
+          @if (post.reference!.year) {
+            <span class="year">{{ post.reference!.year }}</span>
           }
         </div>
+        <div class="review">
+          <div *appHasReference="post.reference" class="stars">
+            @for (star of stars; track star) {
+              <mat-icon>{{ star <= post.reference!.rating ? 'star' : 'star_border' }}</mat-icon>
+            }
+          </div>
+          <p class="text">{{ post.description }}</p>
+          <div class="photos">
+            @for (item of post.media; track item.url) {
+              @if (item.type === 'VIDEO') {
+                <video [src]="item.url" controls></video>
+              } @else {
+                <img [src]="item.url" [alt]="post.title">
+              }
+            }
+          </div>
+        </div>
       </div>
-    </div>
-    @if (post.imageUrl) {
-      <a [routerLink]="['/post', post.id]">
-        <img class="photo" [src]="post.imageUrl" [alt]="post.title">
-      </a>
-    }
-    <p #description class="description" [class.clamped]="!expanded()">{{ post.description }}</p>
-    <!-- en la card chica el texto queda cortado -->
-    @if (isLong() && !expanded() && !compact) {
-      <button type="button" class="more" (click)="expanded.set(true)">ver más...</button>
+    } @else {
+      <div *appHasReference="post.reference" class="reference">
+        @if (post.reference!.imageUrl) {
+          <img [src]="post.reference!.imageUrl" [alt]="post.reference!.title">
+        }
+        <div class="reference-info">
+          <strong>{{ post.reference!.title }}</strong>
+          @if (post.reference!.year) {
+            <span class="year">{{ post.reference!.year }}</span>
+          }
+          <div class="stars">
+            @for (star of stars; track star) {
+              <mat-icon>{{ star <= post.reference!.rating ? 'star' : 'star_border' }}</mat-icon>
+            }
+          </div>
+        </div>
+      </div>
+      @if (post.imageUrl) {
+        <a [routerLink]="['/post', post.id]">
+          <img class="photo" [src]="post.imageUrl" [alt]="post.title">
+        </a>
+      }
+      <p #description class="description" [class.clamped]="!expanded()">{{ post.description }}</p>
+      <!-- en la card chica el texto queda cortado -->
+      @if (isLong() && !expanded() && !compact) {
+        <button type="button" class="more" (click)="expanded.set(true)">ver más...</button>
+      }
     }
     <div class="stats">
       <button type="button" class="like" (click)="toggleLike()">
@@ -54,7 +86,7 @@
       <button type="button" class="fill" (click)="toggleFilled()">
         <mat-icon>{{ filled() ? 'fullscreen_exit' : 'fullscreen' }}</mat-icon>
       </button>
-      @if (isOwner()) {
+      @if (isOwner() || isAdmin()) {
         <button type="button" class="delete" (click)="deletePost()">
           <mat-icon>delete</mat-icon>
         </button>

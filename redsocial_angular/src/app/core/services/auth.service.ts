@@ -21,6 +21,14 @@ interface TokenResponse {
   accessToken: string;
 }
 
+interface TokenPayload {
+  sub: string;
+  username: string;
+  role: string;
+  // expiración en segundos
+  exp: number;
+}
+
 // cuánto antes del vencimiento se avisa
 const WARNING_TIME = 10000;
 
@@ -29,58 +37,46 @@ export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly apiUrl = `${environment.apiUrl}/auth`;
 
-  private warningTimer?: ReturnType<typeof setTimeout>;
+  private warningTimer?: number;
 
   readonly token = signal<string | null>(localStorage.getItem('token'));
   readonly sessionExpiring = signal(false);
 
-  readonly username = computed(() => {
+  // se decodifica una sola vez cada vez que cambia el token
+  private readonly payload = computed(() => {
     const token = this.token();
     if (!token) {
       return null;
     }
-    return this.readPayload(token).username as string;
+    return this.readPayload(token);
   });
 
-  readonly userId = computed(() => {
-    const token = this.token();
-    if (!token) {
-      return null;
-    }
-    return this.readPayload(token).sub as string;
-  });
-
-  readonly isAdmin = computed(() => {
-    const token = this.token();
-    if (!token) {
-      return false;
-    }
-    return this.readPayload(token).role === 'ADMIN';
-  });
+  readonly username = computed(() => this.payload()?.username ?? null);
+  readonly userId = computed(() => this.payload()?.sub ?? null);
+  readonly isAdmin = computed(() => this.payload()?.role === 'ADMIN');
 
   constructor() {
     const token = this.token();
     if (token) {
-      this.scheduleExpiration(token);
+      this.scheduleWarning(token);
     }
   }
 
-  refresh(): Observable<TokenResponse> {
-    return this.http.post<TokenResponse>(`${this.apiUrl}/refresh`, {}).pipe(
-      tap(response => this.saveToken(response.accessToken))
-    );
+  // la API valida que el token no esté vencido ni revocado y que el usuario siga activo
+  authorize(): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/authorize`, {});
   }
 
   login(data: LoginData): Observable<TokenResponse> {
-    return this.http.post<TokenResponse>(`${this.apiUrl}/login`, data).pipe(
-      tap(response => this.saveToken(response.accessToken))
-    );
+    return this.requestToken('login', data);
   }
 
   register(data: RegisterData): Observable<TokenResponse> {
-    return this.http.post<TokenResponse>(`${this.apiUrl}/register`, data).pipe(
-      tap(response => this.saveToken(response.accessToken))
-    );
+    return this.requestToken('register', data);
+  }
+
+  refresh(): Observable<TokenResponse> {
+    return this.requestToken('refresh', {});
   }
 
   logout(): Observable<void> {
@@ -90,13 +86,6 @@ export class AuthService {
     );
   }
 
-  private saveToken(token: string): void {
-    localStorage.setItem('token', token);
-    this.token.set(token);
-    this.sessionExpiring.set(false);
-    this.scheduleExpiration(token);
-  }
-
   clearSession(): void {
     clearTimeout(this.warningTimer);
     localStorage.removeItem('token');
@@ -104,20 +93,32 @@ export class AuthService {
     this.sessionExpiring.set(false);
   }
 
-  // abre el aviso antes de que venza el token; el 401 lo maneja el interceptor
-  private scheduleExpiration(token: string): void {
-    clearTimeout(this.warningTimer);
-
-    // exp viene en segundos
-    const expiresAt = this.readPayload(token).exp * 1000;
-    const timeLeft = expiresAt - Date.now();
-
-    this.warningTimer = setTimeout(() => this.sessionExpiring.set(true), timeLeft - WARNING_TIME);
+  // login, register y refresh devuelven un token nuevo que se guarda igual
+  private requestToken(path: string, body: object): Observable<TokenResponse> {
+    return this.http.post<TokenResponse>(`${this.apiUrl}/${path}`, body).pipe(
+      tap(response => this.saveToken(response.accessToken))
+    );
   }
 
-  private readPayload(token: string) {
-    // el payload del JWT viene en base64url
-    const payload = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
-    return JSON.parse(atob(payload));
+  private saveToken(token: string): void {
+    localStorage.setItem('token', token);
+    this.token.set(token);
+    this.sessionExpiring.set(false);
+    this.scheduleWarning(token);
+  }
+
+  // abre el aviso antes de que venza el token; el 401 lo maneja el interceptor
+  private scheduleWarning(token: string): void {
+    clearTimeout(this.warningTimer);
+    const expiresAt = this.readPayload(token).exp * 1000;
+    const timeLeft = expiresAt - Date.now();
+    this.warningTimer = window.setTimeout(() => this.sessionExpiring.set(true), timeLeft - WARNING_TIME);
+  }
+
+  private readPayload(token: string): TokenPayload {
+    // el JWT es header.payload.firma y el payload viene en base64url
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    return JSON.parse(atob(base64));
   }
 }

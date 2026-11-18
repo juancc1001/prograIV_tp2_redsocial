@@ -37,6 +37,8 @@ export class PostCardComponent implements OnInit, AfterViewInit {
   liked = signal(false);
   likesCount = signal(0);
   isOwner = signal(false);
+  // el admin puede borrar publicaciones ajenas
+  isAdmin = this.authService.isAdmin;
   // la card ocupa toda la pantalla con los comentarios al costado
   filled = signal(false);
   comments = signal<PostComment[]>([]);
