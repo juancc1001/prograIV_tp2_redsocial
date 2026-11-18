@@ -220,7 +220,7 @@
 .card.filled {
   display: flex;
   width: 90vw;
-  height: 75vh;
+  height: 60vh;
   // el feed es más angosto que la card: se centra respecto de la pantalla
   margin: 0 calc(50% - 45vw);
   padding: 0;
@@ -248,6 +248,8 @@
     flex-shrink: 0;
     gap: var(--space-1);
     width: 260px;
+    padding-right: var(--space-5);
+    border-right: 1px solid var(--color-border);
 
     // si no entra con el nombre abajo, la portada se achica (min-height: 0 deja que se encoja)
     img {

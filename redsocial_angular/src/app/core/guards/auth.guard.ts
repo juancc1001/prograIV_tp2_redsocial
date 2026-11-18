@@ -1,6 +1,5 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { catchError, map, of } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 
 // el token se valida contra la API una sola vez, al abrir la app
@@ -19,14 +18,16 @@ export const authGuard: CanActivateFn = () => {
   }
 
   // mientras espera la respuesta se ve el spinner de app.component (checkingGuards)
-  return authService.authorize().pipe(
-    map(() => {
-      authorized = true;
-      return true;
-    }),
-    catchError(() => {
-      authService.clearSession();
-      return of(router.createUrlTree(['/login']));
-    })
-  );
+  return new Promise((resolve) => {
+    authService.authorize().subscribe({
+      next: () => {
+        authorized = true;
+        resolve(true);
+      },
+      error: () => {
+        authService.clearSession();
+        resolve(router.createUrlTree(['/login']));
+      }
+    });
+  });
 };
